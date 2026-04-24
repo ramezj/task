@@ -16,8 +16,7 @@ export default function SignInRoute() {
   return (
     <AuthShell
       eyebrow="Mini Shop"
-      subtitle="Welcome back. Sign in to keep shopping, track your orders, and manage your account."
-      title="Sign in to your account">
+      title="Sign in">
       <SignInForm onSignUpPress={() => router.push("/sign-up")} />
     </AuthShell>
   );

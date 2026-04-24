@@ -6,12 +6,12 @@ import {
   StyleSheet,
   TextInput,
   View,
-  useColorScheme,
 } from "react-native";
 
 import type { RegisterRequestData } from "@task/types/auth.js";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useRegisterMutation } from "@/hooks/use-auth";
@@ -24,7 +24,6 @@ type SignUpFormProps = {
 
 export function SignUpForm({ onLoginPress }: SignUpFormProps) {
   const theme = useTheme();
-  const isDark = useColorScheme() !== "light";
   const emailInputRef = React.useRef<TextInput>(null);
   const passwordInputRef = React.useRef<TextInput>(null);
   const registerMutation = useRegisterMutation();
@@ -63,17 +62,6 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
     }
   }
 
-  const inputStyle = [
-    styles.input,
-    {
-      color: theme.text,
-      backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "#f8fafc",
-      borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(15, 23, 42, 0.1)",
-    },
-  ];
-
-  const placeholderTextColor = isDark ? "rgba(255,255,255,0.38)" : "rgba(15,23,42,0.38)";
-
   return (
     <View style={styles.container}>
       <View style={styles.fieldGroup}>
@@ -89,15 +77,15 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
             },
           }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               autoCapitalize="words"
+              className="h-14 rounded-[18px] px-4"
+              invalid={!!errors.name}
               onBlur={onBlur}
               onChangeText={onChange}
               onSubmitEditing={onNameSubmitEditing}
               placeholder="John Doe"
-              placeholderTextColor={placeholderTextColor}
               returnKeyType="next"
-              style={inputStyle}
               value={value}
             />
           )}
@@ -118,18 +106,18 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
             },
           }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               ref={emailInputRef}
               autoCapitalize="none"
               autoComplete="email"
+              className="h-14 rounded-[18px] px-4"
+              invalid={!!errors.email}
               keyboardType="email-address"
               onBlur={onBlur}
               onChangeText={onChange}
               onSubmitEditing={onEmailSubmitEditing}
               placeholder="m@example.com"
-              placeholderTextColor={placeholderTextColor}
               returnKeyType="next"
-              style={inputStyle}
               value={value}
             />
           )}
@@ -161,16 +149,16 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
             },
           }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               ref={passwordInputRef}
+              className="h-14 rounded-[18px] px-4"
+              invalid={!!errors.password}
               onBlur={onBlur}
               onChangeText={onChange}
               onSubmitEditing={handleSubmit(onSubmit)}
               placeholder="************"
-              placeholderTextColor={placeholderTextColor}
               returnKeyType="send"
               secureTextEntry
-              style={inputStyle}
               value={value}
             />
           )}
@@ -225,13 +213,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: Spacing.two,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 18,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 14,
-    fontSize: 16,
   },
   errorText: {
     color: "#ef4444",

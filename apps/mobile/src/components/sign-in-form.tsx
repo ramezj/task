@@ -1,17 +1,11 @@
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-  useColorScheme,
-} from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from "react-native";
 
 import type { LoginRequestData } from "@task/types/auth.js";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useLoginMutation } from "@/hooks/use-auth";
@@ -24,7 +18,6 @@ type SignInFormProps = {
 
 export function SignInForm({ onSignUpPress }: SignInFormProps) {
   const theme = useTheme();
-  const isDark = useColorScheme() !== "light";
   const passwordInputRef = React.useRef<TextInput>(null);
   const loginMutation = useLoginMutation();
   const {
@@ -49,17 +42,6 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
     });
   }
 
-  const inputStyle = [
-    styles.input,
-    {
-      color: theme.text,
-      backgroundColor: isDark ? "rgba(255, 255, 255, 0.04)" : "#f8fafc",
-      borderColor: isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(15, 23, 42, 0.1)",
-    },
-  ];
-
-  const placeholderTextColor = isDark ? "rgba(255,255,255,0.38)" : "rgba(15,23,42,0.38)";
-
   return (
     <View style={styles.container}>
       <View style={styles.fieldGroup}>
@@ -75,17 +57,17 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
             },
           }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               autoCapitalize="none"
               autoComplete="email"
+              className="h-14 rounded-[18px] px-4"
+              invalid={!!errors.email}
               keyboardType="email-address"
               onBlur={onBlur}
               onChangeText={onChange}
               onSubmitEditing={onEmailSubmitEditing}
               placeholder="m@example.com"
-              placeholderTextColor={placeholderTextColor}
               returnKeyType="next"
-              style={inputStyle}
               value={value}
             />
           )}
@@ -113,16 +95,16 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
             },
           }}
           render={({ field: { onBlur, onChange, value } }) => (
-            <TextInput
+            <Input
               ref={passwordInputRef}
+              className="h-14 rounded-[18px] px-4"
+              invalid={!!errors.password}
               onBlur={onBlur}
               onChangeText={onChange}
               onSubmitEditing={handleSubmit(onSubmit)}
               placeholder="************"
-              placeholderTextColor={placeholderTextColor}
               returnKeyType="send"
               secureTextEntry
-              style={inputStyle}
               value={value}
             />
           )}
@@ -175,13 +157,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: Spacing.two,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 18,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 14,
-    fontSize: 16,
   },
   errorText: {
     color: "#ef4444",

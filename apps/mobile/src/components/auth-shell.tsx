@@ -9,7 +9,7 @@ import { ThemedText } from "@/components/themed-text";
 type AuthShellProps = PropsWithChildren<{
   eyebrow: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   footer?: ReactNode;
 }>;
 

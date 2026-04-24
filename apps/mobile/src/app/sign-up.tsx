@@ -16,8 +16,7 @@ export default function SignUpRoute() {
   return (
     <AuthShell
       eyebrow="Create Account"
-      subtitle="Set up your Mini Shop profile and we will take care of the session state, token refresh, and protected routing."
-      title="Join Mini Shop">
+      title="Sign Up">
       <SignUpForm onLoginPress={() => router.replace("/sign-in")} />
     </AuthShell>
   );
