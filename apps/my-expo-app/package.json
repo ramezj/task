@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@rn-primitives/slot": "^1.4.0",
+    "class-variance-authority": "^0.7.1",
     "expo": "^54.0.0",
     "expo-status-bar": "~3.0.8",
     "nativewind": "latest",
