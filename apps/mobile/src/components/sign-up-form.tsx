@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   TextInput,
@@ -10,6 +11,8 @@ import {
 
 import type { RegisterRequestData } from "@task/types/auth.js";
 
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useRegisterMutation } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
@@ -183,17 +186,18 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
         <ThemedText style={styles.errorText}>{registerMutation.error.message}</ThemedText>
       ) : null}
 
-      <Pressable
+      <Button
+        className="h-14 rounded-[18px]"
         disabled={registerMutation.isPending}
         onPress={handleSubmit(onSubmit)}
-        style={({ pressed }) => [
-          styles.primaryButton,
-          { opacity: pressed || registerMutation.isPending ? 0.82 : 1 },
-        ]}>
-        <ThemedText style={styles.primaryButtonText}>
-          {registerMutation.isPending ? "Creating account..." : "Continue"}
-        </ThemedText>
-      </Pressable>
+        size="lg">
+        {registerMutation.isPending ? (
+          <ActivityIndicator color={theme.primaryForeground} size="small" />
+        ) : null}
+        <Text className="text-base font-bold">
+          Sign Up
+        </Text>
+      </Button>
 
       <View style={styles.footerRow}>
         <ThemedText themeColor="textSecondary" type="small">
@@ -238,18 +242,6 @@ const styles = StyleSheet.create({
     color: "#16a34a",
     fontSize: 14,
     lineHeight: 20,
-  },
-  primaryButton: {
-    backgroundColor: "#111827",
-    borderRadius: 18,
-    paddingVertical: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "700",
   },
   footerRow: {
     flexDirection: "row",

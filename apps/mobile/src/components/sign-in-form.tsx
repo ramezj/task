@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   TextInput,
@@ -10,6 +11,8 @@ import {
 
 import type { LoginRequestData } from "@task/types/auth.js";
 
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useLoginMutation } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
@@ -133,17 +136,18 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
         <ThemedText style={styles.errorText}>{loginMutation.error.message}</ThemedText>
       ) : null}
 
-      <Pressable
+      <Button
+        className="h-14 rounded-[18px]"
         disabled={loginMutation.isPending}
         onPress={handleSubmit(onSubmit)}
-        style={({ pressed }) => [
-          styles.primaryButton,
-          { opacity: pressed || loginMutation.isPending ? 0.82 : 1 },
-        ]}>
-        <ThemedText style={styles.primaryButtonText}>
-          {loginMutation.isPending ? "Signing in..." : "Continue"}
-        </ThemedText>
-      </Pressable>
+        size="lg">
+        {loginMutation.isPending ? (
+          <ActivityIndicator color={theme.primaryForeground} size="small" />
+        ) : null}
+        <Text className="text-base font-bold">
+          Sign In
+        </Text>
+      </Button>
 
       <View style={styles.footerRow}>
         <ThemedText themeColor="textSecondary" type="small">
@@ -183,18 +187,6 @@ const styles = StyleSheet.create({
     color: "#ef4444",
     fontSize: 14,
     lineHeight: 20,
-  },
-  primaryButton: {
-    backgroundColor: "#111827",
-    borderRadius: 18,
-    paddingVertical: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  primaryButtonText: {
-    color: "#ffffff",
-    fontSize: 16,
-    fontWeight: "700",
   },
   footerRow: {
     flexDirection: "row",

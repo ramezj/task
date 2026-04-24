@@ -1,6 +1,8 @@
-import { Pressable, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
 import {
@@ -35,17 +37,18 @@ export default function ProfileScreen() {
           </ThemedText>
         </View>
 
-        <Pressable
+        <Button
+          className="h-14 rounded-[18px]"
           disabled={logoutMutation.isPending}
           onPress={() => logoutMutation.mutate()}
-          style={({ pressed }) => [
-            styles.button,
-            { opacity: pressed || logoutMutation.isPending ? 0.82 : 1 },
-          ]}>
-          <ThemedText style={styles.buttonText}>
-            {logoutMutation.isPending ? "Signing out..." : "Sign out"}
-          </ThemedText>
-        </Pressable>
+          size="lg">
+          {logoutMutation.isPending ? (
+            <ActivityIndicator color={theme.primaryForeground} size="small" />
+          ) : null}
+          <Text className="text-base font-bold">
+            Sign out
+          </Text>
+        </Button>
       </View>
     </SafeAreaView>
   );
@@ -69,15 +72,5 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: Spacing.four,
     gap: Spacing.one,
-  },
-  button: {
-    backgroundColor: "#111827",
-    borderRadius: 18,
-    paddingVertical: 16,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#ffffff",
-    fontWeight: "700",
   },
 });
