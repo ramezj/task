@@ -4,6 +4,7 @@ import type { HealthcheckResponse } from "@task/types/system.js";
 import authPlugin from "./plugins/auth.js";
 import { env } from "./config/env.js";
 import authRoutes from "./routes/auth/index.js";
+import productRoutes from "./routes/products/index.js";
 import { sendError, sendSuccess } from "./lib/responses.js";
 
 const app = Fastify({
@@ -47,6 +48,7 @@ app.get<{ Reply: HealthcheckResponse }>("/", async (request, reply) => {
 });
 
 app.register(authRoutes, { prefix: "/api/auth" });
+app.register(productRoutes, { prefix: "/api/products" });
 
 app.listen({ port }, (err, address) => {
   if (err) {
