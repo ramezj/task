@@ -1,6 +1,5 @@
 import Fastify from "fastify";
 import type { HealthcheckResponse } from "@task/types/system.js";
-import type { AuthErrorResponse, MeSuccessResponse } from "@task/types/auth.js";
 import authPlugin from "./plugins/auth.js";
 import authRoutes from "./routes/auth/index.js";
 import { sendError, sendSuccess } from "./lib/responses.js";
@@ -42,28 +41,6 @@ app.get<{ Reply: HealthcheckResponse }>("/", async (request, reply) => {
 });
 
 app.register(authRoutes, { prefix: "/api/auth" });
-// Example of a protected route using preHandler hook
-app.get<{
-  Reply: MeSuccessResponse | AuthErrorResponse;
-}>(
-  "/me",
-  { preHandler: [async (request, reply) => app.authenticate(request, reply)] },
-  async (request, reply) => {
-    if (!request.user) {
-      return sendError(
-        reply,
-        401,
-        "Unauthorized",
-        "Invalid token or user not found",
-      );
-    }
-
-    return sendSuccess(reply, 200, {
-      message: "You are authenticated via Supabase",
-      user: request.user,
-    });
-  },
-);
 
 app.listen({ port }, (err, address) => {
   if (err) {
