@@ -1,66 +1,41 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
-import { AuthShell } from '@/screens/AuthShell';
 
-export function LoginScreen() {
+type LoginScreenProps = {
+  onSignUpPress: () => void;
+};
+
+export function LoginScreen({ onSignUpPress }: LoginScreenProps) {
   return (
-    <AuthShell
-      eyebrow="Welcome Back"
-      title="Sign in and pick up where you left off."
-      subtitle="A quiet, focused entry point for your mobile workspace. No extra chrome, just the essentials."
-      footer={
-        <View className="flex-row items-center justify-center gap-2">
-          <Text className="text-sm text-zinc-400">Need an account?</Text>
-          <Text className="text-sm font-semibold text-white">Create one</Text>
-        </View>
-      }
-    >
-      <View className="gap-5">
-        <View className="gap-1.5">
-          <Text className="text-sm font-medium text-zinc-300">Email</Text>
+    <SafeAreaView className="flex-1 bg-white">
+      <View className="flex-1 justify-center px-6">
+        <View className="gap-4">
           <Input
             autoCapitalize="none"
-            editable={false}
             keyboardType="email-address"
-            placeholder="name@example.com"
-            placeholderTextColor="#71717a"
-            value=""
-            className="h-14 rounded-2xl border-white/12 bg-white/6 px-4 text-base text-white"
+            placeholder="Email"
+            className="h-12 border-zinc-300 bg-white text-black"
           />
-        </View>
-
-        <View className="gap-1.5">
-          <View className="flex-row items-center justify-between">
-            <Text className="text-sm font-medium text-zinc-300">Password</Text>
-            <Text className="text-sm text-zinc-400">Forgot?</Text>
-          </View>
           <Input
-            editable={false}
-            placeholder="Enter your password"
-            placeholderTextColor="#71717a"
+            placeholder="Password"
             secureTextEntry
-            value=""
-            className="h-14 rounded-2xl border-white/12 bg-white/6 px-4 text-base text-white"
+            className="h-12 border-zinc-300 bg-white text-black"
           />
-        </View>
-
-        <View className="gap-3 pt-2">
-          <Button size="lg" className="h-14 rounded-2xl bg-amber-400">
-            <Text className="text-base font-semibold text-zinc-950">Sign In</Text>
+          <Button className="h-12 bg-black">
+            <Text className="text-white">Login</Text>
           </Button>
-
-          <Button
-            variant="outline"
-            size="lg"
-            className="h-14 rounded-2xl border-white/12 bg-transparent"
-          >
-            <Text className="text-base font-semibold text-white">Continue with Google</Text>
-          </Button>
+          <View className="flex-row justify-center gap-1">
+            <Text className="text-sm text-zinc-600">New user?</Text>
+            <Pressable onPress={onSignUpPress}>
+              <Text className="text-sm text-black underline">Sign Up</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </AuthShell>
+    </SafeAreaView>
   );
 }
