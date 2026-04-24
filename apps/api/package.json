@@ -21,6 +21,6 @@
     "zod": "^4.3.6"
   },
   "scripts": {
-    "dev": "tsx src/index.ts"
+    "dev": "tsx watch src/index.ts"
   }
 }
