@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import "@/global.css";
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
 import {

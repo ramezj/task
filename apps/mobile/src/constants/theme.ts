@@ -1,26 +1,49 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
-
-import '@/global.css';
-
 import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
+    text: '#09090b',
     background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    backgroundElement: '#f4f4f5',
+    backgroundSelected: '#e4e4e7',
+    textSecondary: '#71717a',
+    card: '#ffffff',
+    cardForeground: '#09090b',
+    primary: '#18181b',
+    primaryForeground: '#fafafa',
+    secondary: '#f4f4f5',
+    secondaryForeground: '#18181b',
+    muted: '#f4f4f5',
+    mutedForeground: '#71717a',
+    accent: '#f4f4f5',
+    accentForeground: '#18181b',
+    destructive: '#ef4444',
+    destructiveForeground: '#fafafa',
+    border: '#e4e4e7',
+    input: '#e4e4e7',
+    ring: '#18181b',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#fafafa',
+    background: '#09090b',
+    backgroundElement: '#27272a',
+    backgroundSelected: '#3f3f46',
+    textSecondary: '#a1a1aa',
+    card: '#09090b',
+    cardForeground: '#fafafa',
+    primary: '#fafafa',
+    primaryForeground: '#18181b',
+    secondary: '#27272a',
+    secondaryForeground: '#fafafa',
+    muted: '#27272a',
+    mutedForeground: '#a1a1aa',
+    accent: '#27272a',
+    accentForeground: '#fafafa',
+    destructive: '#7f1d1d',
+    destructiveForeground: '#fafafa',
+    border: '#27272a',
+    input: '#27272a',
+    ring: '#d4d4d8',
   },
 } as const;
 
