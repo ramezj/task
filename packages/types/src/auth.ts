@@ -10,6 +10,17 @@ export interface AuthenticatedUser {
   name: string | null;
 }
 
+export interface LoginRequestData {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequestData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface RegisterPendingConfirmationData {
   requiresEmailConfirmation: true;
   message: string;

@@ -1,6 +1,8 @@
+import cors from "@fastify/cors";
 import Fastify from "fastify";
 import type { HealthcheckResponse } from "@task/types/system.js";
 import authPlugin from "./plugins/auth.js";
+import { env } from "./config/env.js";
 import authRoutes from "./routes/auth/index.js";
 import { sendError, sendSuccess } from "./lib/responses.js";
 
@@ -8,6 +10,10 @@ const app = Fastify({
   logger: true,
 });
 const port = Number(process.env.PORT ?? 8080);
+
+app.register(cors, {
+  origin: [env.CLIENT_URL],
+});
 
 // Register Auth Plugin
 app.register(authPlugin);
