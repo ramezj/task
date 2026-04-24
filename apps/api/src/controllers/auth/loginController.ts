@@ -1,24 +1,25 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import type {
-  RegisterErrorResponse,
-  RegisterSuccessResponse,
+  LoginErrorResponse,
+  LoginSuccessResponse,
 } from "@task/types/auth.js";
 import {
-  RegisterBodySchema,
-  type RegisterBody,
+  LoginBodySchema,
+  type LoginBody,
 } from "../../routes/auth/schemas.js";
 import { handleSupabaseAuthError } from "../../lib/auth-errors.js";
-import { supabase } from "../../plugins/supabase.js";
 import { sendError, sendSuccess } from "../../lib/responses.js";
+import { supabase } from "../../plugins/supabase.js";
 
-export async function registerController(
+export async function loginController(
   req: FastifyRequest<{
-    Body: RegisterBody;
-    Reply: RegisterSuccessResponse | RegisterErrorResponse;
+    Body: LoginBody;
+    Reply: LoginSuccessResponse | LoginErrorResponse;
   }>,
   reply: FastifyReply,
 ) {
-  const parsed = RegisterBodySchema.safeParse(req.body);
+  const parsed = LoginBodySchema.safeParse(req.body);
+
   if (!parsed.success) {
     const details = Object.entries(parsed.error.flatten().fieldErrors)
       .flatMap(([field, messages]) =>
@@ -34,22 +35,14 @@ export async function registerController(
     );
   }
 
-  const { name, email, password } = parsed.data;
-  const { data, error } = await supabase.auth.signUp({
+  const { email, password } = parsed.data;
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
-    options: {
-      data: { name },
-    },
   });
 
   if (error) {
-    const handledError = handleSupabaseAuthError(
-      req,
-      reply,
-      error,
-      "registration",
-    );
+    const handledError = handleSupabaseAuthError(req, reply, error, "login");
 
     if (handledError) {
       return handledError;
@@ -58,23 +51,17 @@ export async function registerController(
     throw error;
   }
 
-  if (!data.session) {
-    return sendSuccess(reply, 201, {
-      requiresEmailConfirmation: true,
-      message:
-        "Registration successful. Please check your email to confirm your account.",
-    });
-  }
-
-  return sendSuccess(reply, 201, {
-    requiresEmailConfirmation: false,
+  return sendSuccess(reply, 200, {
     accessToken: data.session.access_token,
     refreshToken: data.session.refresh_token,
     expiresIn: data.session.expires_in,
     user: {
-      id: data.user!.id,
-      email: data.user!.email ?? null,
-      name,
+      id: data.user.id,
+      email: data.user.email ?? null,
+      name:
+        typeof data.user.user_metadata?.name === "string"
+          ? data.user.user_metadata.name
+          : null,
     },
   });
 }

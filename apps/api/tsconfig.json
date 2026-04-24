@@ -13,7 +13,6 @@
       "@task/types/*": ["../../packages/types/src/*"]
     },
     "target": "esnext",
-    "ignoreDeprecations": "6.0",
     "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],

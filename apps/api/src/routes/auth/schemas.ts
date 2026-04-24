@@ -7,3 +7,16 @@ export const RegisterBodySchema = z.object({
 });
 
 export type RegisterBody = z.infer<typeof RegisterBodySchema>;
+
+export const LoginBodySchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8).max(72),
+});
+
+export type LoginBody = z.infer<typeof LoginBodySchema>;
+
+export const ResetPasswordBodySchema = z.object({
+  email: z.string().email(),
+});
+
+export type ResetPasswordBody = z.infer<typeof ResetPasswordBodySchema>;

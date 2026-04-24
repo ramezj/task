@@ -1,4 +1,8 @@
-import type { ApiErrorResponse, ApiSuccessResponse } from "./api.js";
+import type {
+  ApiErrorName,
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from "./api.js";
 
 export interface AuthenticatedUser {
   id: string;
@@ -11,12 +15,15 @@ export interface RegisterPendingConfirmationData {
   message: string;
 }
 
-export interface RegisterCompletedData {
-  requiresEmailConfirmation: false;
+export interface AuthSessionData {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
   user: AuthenticatedUser;
+}
+
+export interface RegisterCompletedData extends AuthSessionData {
+  requiresEmailConfirmation: false;
 }
 
 export type RegisterSuccessData =
@@ -26,7 +33,24 @@ export type RegisterSuccessData =
 export type RegisterSuccessResponse = ApiSuccessResponse<RegisterSuccessData>;
 
 export type RegisterErrorResponse = ApiErrorResponse<
-  "Validation Error" | "Conflict" | "Bad Request" | "Internal Server Error"
+  "Validation Error" | ApiErrorName
+>;
+
+export type LoginSuccessResponse = ApiSuccessResponse<AuthSessionData>;
+
+export type LoginErrorResponse = ApiErrorResponse<
+  "Validation Error" | ApiErrorName
+>;
+
+export interface ResetPasswordSuccessData {
+  message: string;
+}
+
+export type ResetPasswordSuccessResponse =
+  ApiSuccessResponse<ResetPasswordSuccessData>;
+
+export type ResetPasswordErrorResponse = ApiErrorResponse<
+  "Validation Error" | ApiErrorName
 >;
 
 export interface MeSuccessData {
