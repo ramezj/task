@@ -22,9 +22,7 @@ import { queryClient } from '@/lib/query-client';
 import {
   useAuthBootstrap,
   useCurrentUserQuery,
-  useLoginMutation,
   useLogoutMutation,
-  useRegisterMutation,
   useSessionQuery,
 } from '@/hooks/useAuth';
 import { ApiClientError } from '@/lib/api';
@@ -35,12 +33,9 @@ function AuthApp() {
 
   const [screen, setScreen] = useState<'login' | 'register'>('login');
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [registerNotice, setRegisterNotice] = useState<string | undefined>();
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const scale = useSharedValue(1);
   const sessionQuery = useSessionQuery();
-  const loginMutation = useLoginMutation();
-  const registerMutation = useRegisterMutation();
   const logoutMutation = useLogoutMutation();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
 
@@ -53,9 +48,6 @@ function AuthApp() {
       return;
     }
 
-    loginMutation.reset();
-    registerMutation.reset();
-    setRegisterNotice(undefined);
     setIsTransitioning(true);
     scale.value = withTiming(
       0.985,
@@ -69,14 +61,18 @@ function AuthApp() {
         }
 
         runOnJS(setScreen)(nextScreen);
-        scale.value = withTiming(1, {
-          duration: 180,
-          easing: Easing.inOut(Easing.ease),
-        }, (expanded) => {
-          if (expanded) {
-            runOnJS(setIsTransitioning)(false);
+        scale.value = withTiming(
+          1,
+          {
+            duration: 180,
+            easing: Easing.inOut(Easing.ease),
+          },
+          (expanded) => {
+            if (expanded) {
+              runOnJS(setIsTransitioning)(false);
+            }
           }
-        });
+        );
       }
     );
   };
@@ -95,7 +91,12 @@ function AuthApp() {
 
   if (sessionQuery.isLoading || (sessionQuery.data && currentUserQuery.isLoading)) {
     return (
-      <View className={cn('flex-1 items-center justify-center bg-background', theme === 'dark' && 'dark')}>
+      <View
+        className={cn(
+          'flex-1 items-center justify-center bg-background',
+          theme === 'dark' && 'dark'
+        )}
+      >
         <ActivityIndicator size="large" color={theme === 'light' ? '#111827' : '#fafafa'} />
       </View>
     );
@@ -138,29 +139,9 @@ function AuthApp() {
       </View>
       <Animated.View className="flex-1" style={animatedStyle}>
         {screen === 'login' ? (
-          <LoginScreen
-            errorMessage={loginMutation.error?.message}
-            isPending={loginMutation.isPending}
-            onSignUpPress={() => switchScreen('register')}
-            onSubmit={(payload) => {
-              setRegisterNotice(undefined);
-              loginMutation.mutate(payload);
-            }}
-          />
+          <LoginScreen onSignUpPress={() => switchScreen('register')} />
         ) : (
-          <RegisterScreen
-            errorMessage={registerMutation.error?.message}
-            isPending={registerMutation.isPending}
-            onLoginPress={() => switchScreen('login')}
-            onSubmit={async (payload) => {
-              const result = await registerMutation.mutateAsync(payload);
-
-              if (result.requiresEmailConfirmation) {
-                setRegisterNotice(result.message);
-              }
-            }}
-            successMessage={registerNotice}
-          />
+          <RegisterScreen onLoginPress={() => switchScreen('login')} />
         )}
       </Animated.View>
       <StatusBar style={theme === 'light' ? 'dark' : 'light'} />

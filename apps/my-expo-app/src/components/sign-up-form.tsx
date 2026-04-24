@@ -1,4 +1,3 @@
-import { SocialConnections } from '@/components/social-connections';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,9 +8,12 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { useRegisterMutation } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+import type { RegisterRequestData } from '@task/types/auth.js';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Pressable, TextInput, View } from 'react-native';
 
 type SignUpFormProps = {
@@ -19,14 +21,42 @@ type SignUpFormProps = {
 };
 
 export function SignUpForm({ onLoginPress }: SignUpFormProps) {
+  const emailInputRef = React.useRef<TextInput>(null);
   const passwordInputRef = React.useRef<TextInput>(null);
+  const registerMutation = useRegisterMutation();
+  const [successMessage, setSuccessMessage] = React.useState<string | null>(null);
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterRequestData>({
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+    },
+  });
+
+  function onNameSubmitEditing() {
+    emailInputRef.current?.focus();
+  }
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
   }
 
-  function onSubmit() {
-    // TODO: Submit form and navigate to protected screen if successful
+  async function onSubmit(values: RegisterRequestData) {
+    setSuccessMessage(null);
+
+    const result = await registerMutation.mutateAsync({
+      name: values.name.trim(),
+      email: values.email.trim(),
+      password: values.password,
+    });
+
+    if (result.requiresEmailConfirmation) {
+      setSuccessMessage(result.message);
+    }
   }
 
   return (
@@ -41,33 +71,119 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
         <CardContent className="gap-6">
           <View className="gap-6">
             <View className="gap-1.5">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="m@example.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
+              <Label htmlFor="name">Name</Label>
+              <Controller
+                control={control}
+                name="name"
+                rules={{
+                  required: 'Name is required.',
+                  maxLength: {
+                    value: 80,
+                    message: 'Name must be 80 characters or less.',
+                  },
+                }}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Input
+                    id="name"
+                    autoCapitalize="words"
+                    invalid={!!errors.name}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    onSubmitEditing={onNameSubmitEditing}
+                    placeholder="John Doe"
+                    returnKeyType="next"
+                    submitBehavior="submit"
+                    value={value}
+                  />
+                )}
               />
+              {errors.name ? (
+                <Text className="text-sm text-destructive">{errors.name.message}</Text>
+              ) : null}
+            </View>
+            <View className="gap-1.5">
+              <Label htmlFor="email">Email</Label>
+              <Controller
+                control={control}
+                name="email"
+                rules={{
+                  required: 'Email is required.',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Enter a valid email address.',
+                  },
+                }}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Input
+                    ref={emailInputRef}
+                    id="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    invalid={!!errors.email}
+                    keyboardType="email-address"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    onSubmitEditing={onEmailSubmitEditing}
+                    placeholder="m@example.com"
+                    returnKeyType="next"
+                    submitBehavior="submit"
+                    value={value}
+                  />
+                )}
+              />
+              {errors.email ? (
+                <Text className="text-sm text-destructive">{errors.email.message}</Text>
+              ) : null}
             </View>
             <View className="gap-1.5">
               <View className="flex-row items-center">
                 <Label htmlFor="password">Password</Label>
               </View>
-              <Input
-                ref={passwordInputRef}
-                id="password"
-                placeholder='************'
-                secureTextEntry
-                returnKeyType="send"
-                onSubmitEditing={onSubmit}
+              <Controller
+                control={control}
+                name="password"
+                rules={{
+                  required: 'Password is required.',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters.',
+                  },
+                  maxLength: {
+                    value: 72,
+                    message: 'Password must be 72 characters or less.',
+                  },
+                }}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Input
+                    ref={passwordInputRef}
+                    id="password"
+                    invalid={!!errors.password}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    onSubmitEditing={handleSubmit(onSubmit)}
+                    placeholder="************"
+                    returnKeyType="send"
+                    secureTextEntry
+                    value={value}
+                  />
+                )}
               />
+              {errors.password ? (
+                <Text className="text-sm text-destructive">{errors.password.message}</Text>
+              ) : null}
             </View>
-            <Button className="w-full" onPress={onSubmit}>
-              <Text>Continue</Text>
+            {successMessage ? (
+              <Text className="text-sm text-emerald-600">{successMessage}</Text>
+            ) : null}
+            {registerMutation.error ? (
+              <Text className="text-sm text-destructive">{registerMutation.error.message}</Text>
+            ) : null}
+            <Button
+              className={cn('w-full', registerMutation.isPending && 'opacity-70')}
+              disabled={registerMutation.isPending}
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text>{registerMutation.isPending ? 'Creating account...' : 'Continue'}</Text>
             </Button>
           </View>
           <View className="flex-row items-center justify-center gap-1">
@@ -76,11 +192,6 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
               <Text className="text-sm underline underline-offset-4">Sign in</Text>
             </Pressable>
           </View>
-          {/* <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="text-muted-foreground px-4 text-sm">or</Text>
-            <Separator className="flex-1" />
-          </View> */}
         </CardContent>
       </Card>
     </View>

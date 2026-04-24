@@ -1,4 +1,3 @@
-import { SocialConnections } from '@/components/social-connections';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -9,9 +8,12 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
 import { Text } from '@/components/ui/text';
+import { useLoginMutation } from '@/hooks/useAuth';
+import { cn } from '@/lib/utils';
+import type { LoginRequestData } from '@task/types/auth.js';
 import * as React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { Pressable, type TextInput, View } from 'react-native';
 
 type SignInFormProps = {
@@ -20,13 +22,27 @@ type SignInFormProps = {
 
 export function SignInForm({ onSignUpPress }: SignInFormProps) {
   const passwordInputRef = React.useRef<TextInput>(null);
+  const loginMutation = useLoginMutation();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginRequestData>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
   function onEmailSubmitEditing() {
     passwordInputRef.current?.focus();
   }
 
-  function onSubmit() {
-    // TODO: Submit form and navigate to protected screen if successful
+  function onSubmit(values: LoginRequestData) {
+    loginMutation.mutate({
+      email: values.email.trim(),
+      password: values.password,
+    });
   }
 
   return (
@@ -42,16 +58,36 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           <View className="gap-6">
             <View className="gap-1.5">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                placeholder="m@example.com"
-                keyboardType="email-address"
-                autoComplete="email"
-                autoCapitalize="none"
-                onSubmitEditing={onEmailSubmitEditing}
-                returnKeyType="next"
-                submitBehavior="submit"
+              <Controller
+                control={control}
+                name="email"
+                rules={{
+                  required: 'Email is required.',
+                  pattern: {
+                    value: /\S+@\S+\.\S+/,
+                    message: 'Enter a valid email address.',
+                  },
+                }}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Input
+                    id="email"
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    invalid={!!errors.email}
+                    keyboardType="email-address"
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    onSubmitEditing={onEmailSubmitEditing}
+                    placeholder="m@example.com"
+                    returnKeyType="next"
+                    submitBehavior="submit"
+                    value={value}
+                  />
+                )}
               />
+              {errors.email ? (
+                <Text className="text-sm text-destructive">{errors.email.message}</Text>
+              ) : null}
             </View>
             <View className="gap-1.5">
               <View className="flex-row items-center">
@@ -66,17 +102,44 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
                   <Text className="font-normal leading-4">Forgot your password?</Text>
                 </Button>
               </View>
-              <Input
-                              placeholder='************'
-                ref={passwordInputRef}
-                id="password"
-                secureTextEntry
-                returnKeyType="send"
-                onSubmitEditing={onSubmit}
+              <Controller
+                control={control}
+                name="password"
+                rules={{
+                  required: 'Password is required.',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters.',
+                  },
+                }}
+                render={({ field: { onBlur, onChange, value } }) => (
+                  <Input
+                    ref={passwordInputRef}
+                    id="password"
+                    invalid={!!errors.password}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    onSubmitEditing={handleSubmit(onSubmit)}
+                    placeholder="************"
+                    returnKeyType="send"
+                    secureTextEntry
+                    value={value}
+                  />
+                )}
               />
+              {errors.password ? (
+                <Text className="text-sm text-destructive">{errors.password.message}</Text>
+              ) : null}
             </View>
-            <Button className="w-full" onPress={onSubmit}>
-              <Text>Continue</Text>
+            {loginMutation.error ? (
+              <Text className="text-sm text-destructive">{loginMutation.error.message}</Text>
+            ) : null}
+            <Button
+              className={cn('w-full', loginMutation.isPending && 'opacity-70')}
+              disabled={loginMutation.isPending}
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text>{loginMutation.isPending ? 'Signing in...' : 'Continue'}</Text>
             </Button>
           </View>
           <View className="flex-row items-center justify-center gap-1">
@@ -85,12 +148,6 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
               <Text className="text-sm underline underline-offset-4">Sign up</Text>
             </Pressable>
           </View>
-          {/* <View className="flex-row items-center">
-            <Separator className="flex-1" />
-            <Text className="text-muted-foreground px-4 text-sm">or</Text>
-            <Separator className="flex-1" />
-          </View> */}
-          {/* <SocialConnections /> */}
         </CardContent>
       </Card>
     </View>
