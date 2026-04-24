@@ -10,7 +10,7 @@ import {
 } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 
-export default function AccountScreen() {
+export default function ProfileScreen() {
   const theme = useTheme();
   const sessionQuery = useSessionQuery();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
@@ -19,9 +19,12 @@ export default function AccountScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <View style={styles.container}>
-        <ThemedText type="subtitle">Account</ThemedText>
+        <ThemedText type="smallBold" style={styles.eyebrow}>
+          Profile
+        </ThemedText>
+        <ThemedText type="subtitle">Manage your account.</ThemedText>
         <ThemedText themeColor="textSecondary">
-          Sign-out is hooked into the shared Supabase session state and clears the auth queries.
+          Sign-out is still wired into Supabase session state and clears the auth queries.
         </ThemedText>
 
         <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
@@ -56,6 +59,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.four,
     gap: Spacing.three,
+  },
+  eyebrow: {
+    color: "#f59e0b",
+    textTransform: "uppercase",
   },
   card: {
     borderWidth: 1,

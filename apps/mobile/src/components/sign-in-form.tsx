@@ -147,7 +147,7 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
 
       <View style={styles.footerRow}>
         <ThemedText themeColor="textSecondary" type="small">
-          Don&apos;t have an account?
+          Don't have an account?
         </ThemedText>
         <Pressable onPress={onSignUpPress}>
           <ThemedText style={styles.linkText} type="smallBold">

@@ -60,8 +60,8 @@ function RootNavigation() {
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
-        <Stack.Screen name="sign-in" />
-        <Stack.Screen name="sign-up" />
+        <Stack.Screen name="sign-in" options={{ animation: "fade" }} />
+        <Stack.Screen name="sign-up" options={{ animation: "fade" }} />
         <Stack.Screen name="(app)" />
       </Stack>
       <StatusBar style="auto" />

@@ -7,7 +7,7 @@ export default function IndexRoute() {
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
 
   if (currentUserQuery.data?.user) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/shop" />;
   }
 
   return <Redirect href="/sign-in" />;

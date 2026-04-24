@@ -6,7 +6,7 @@ import { Spacing } from "@/constants/theme";
 import { useCurrentUserQuery, useSessionQuery } from "@/hooks/use-auth";
 import { useTheme } from "@/hooks/use-theme";
 
-export default function HomeScreen() {
+export default function ShopScreen() {
   const theme = useTheme();
   const sessionQuery = useSessionQuery();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
@@ -16,18 +16,17 @@ export default function HomeScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <View style={styles.container}>
         <ThemedText type="smallBold" style={styles.eyebrow}>
-          Authenticated
+          Shop
         </ThemedText>
-        <ThemedText type="subtitle">You are signed in.</ThemedText>
+        <ThemedText type="subtitle">Welcome back{user?.name ? `, ${user.name}` : ""}.</ThemedText>
         <ThemedText themeColor="textSecondary" style={styles.copy}>
-          This route is protected by Expo Router and fed from the same auth/query flow you already
-          built in the other app.
+          This is the signed-in landing tab. Your auth state, current-user query, and protected
+          routing are all coming from the shared auth flow we ported over.
         </ThemedText>
 
         <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
-          <ThemedText type="smallBold">Current user</ThemedText>
-          <ThemedText>{user?.name ?? "No display name yet"}</ThemedText>
-          <ThemedText themeColor="textSecondary">{user?.email ?? "No email available"}</ThemedText>
+          <ThemedText type="smallBold">Signed in as</ThemedText>
+          <ThemedText>{user?.email ?? "No email available"}</ThemedText>
         </View>
       </View>
     </SafeAreaView>
