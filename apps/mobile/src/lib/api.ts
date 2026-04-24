@@ -7,6 +7,10 @@ import type {
   RegisterRequestData,
   RegisterSuccessData,
 } from "@task/types/auth.js";
+import type {
+  ListProductsRequestData,
+  ListProductsSuccessData,
+} from "@task/types/product.js";
 
 export type { AuthenticatedUser } from "@task/types/auth.js";
 
@@ -33,10 +37,19 @@ type RequestOptions = {
   accessToken?: string;
   body?: unknown;
   method?: "GET" | "POST";
+  query?: Record<string, string | undefined>;
 };
 
 async function request<TData>(path: string, options: RequestOptions = {}) {
-  const response = await fetch(`${config.apiUrl}${path}`, {
+  const queryString = options.query
+    ? new URLSearchParams(
+        Object.entries(options.query).filter((entry): entry is [string, string] =>
+          typeof entry[1] === "string" && entry[1].length > 0
+        )
+      ).toString()
+    : "";
+
+  const response = await fetch(`${config.apiUrl}${path}${queryString ? `?${queryString}` : ""}`, {
     method: options.method ?? "GET",
     headers: {
       Accept: "application/json",
@@ -85,6 +98,17 @@ export async function register(payload: RegisterRequestData) {
 export async function fetchCurrentUser(accessToken: string) {
   const response = await request<MeSuccessData>("/api/auth/me", {
     accessToken,
+  });
+
+  return response.data;
+}
+
+export async function fetchProducts(filters: ListProductsRequestData = {}) {
+  const response = await request<ListProductsSuccessData>("/api/products", {
+    query: {
+      category: filters.category,
+      search: filters.search,
+    },
   });
 
   return response.data;
