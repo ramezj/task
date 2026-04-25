@@ -52,7 +52,7 @@ app.register(authRoutes, { prefix: "/api/auth" });
 app.register(orderRoutes, { prefix: "/api/orders" });
 app.register(productRoutes, { prefix: "/api/products" });
 
-app.listen({ port }, (err, address) => {
+app.listen({ port, host: '0.0.0.0' }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);

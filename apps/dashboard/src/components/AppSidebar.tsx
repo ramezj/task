@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useLocation } from '@tanstack/react-router'
 import {
   LayoutDashboard,
   Package,
@@ -12,6 +12,9 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -34,59 +37,61 @@ const navItems = [
     title: 'Orders',
     href: '/orders',
     icon: ShoppingCart,
-  },
-  {
-    title: 'Customers',
-    href: '/customers',
-    icon: Users,
-  },
-  {
-    title: 'Settings',
-    href: '/settings',
-    icon: Settings,
-  },
+  }
 ]
 
 export function AppSidebar() {
+  const location = useLocation()
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-2">
-          <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <Package className="size-4" />
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-            <span className="truncate font-semibold">Admin Shop</span>
-          </div>
-        </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarMenu>
-          {navItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton asChild tooltip={item.title}>
-                <Link to={item.href}>
-                  <item.icon />
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Logout">
-              <Link to="/logout">
-                <LogOut />
-                <span>Logout</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-      <SidebarRail />
-    </Sidebar>
-  )
-}
+          <SidebarHeader className="border-b h-16 flex items-center justify-center">
+            <div className="flex items-center gap-2 px-4 w-full">
+              <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
+                <Package className="size-6" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                <span className="truncate font-semibold text-base">Admin Shop</span>
+              </div>
+            </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarGroup>
+              <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className='space-y-2'>
+                  {navItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton 
+                        asChild 
+                        tooltip={item.title}
+                        isActive={location.pathname === item.href}
+                        className="h-10"
+                      >
+                        <Link to={item.href}>
+                          <item.icon className="size-5" />
+                          <span className="text-sm font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          </SidebarContent>
+          <SidebarFooter className="border-t">
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton variant="outline" asChild tooltip="Logout">
+                  <Link to="/logout">
+                    <LogOut className="size-4" />
+                    <span>Logout</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarFooter>
+          <SidebarRail />
+        </Sidebar>
+      )
+    }

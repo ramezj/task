@@ -59,7 +59,7 @@ function DashboardHome() {
   ]
 
   return (
-    <div className="p-4 space-y-2">
+    <div className="space-y-4">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
         <p className="text-muted-foreground">
