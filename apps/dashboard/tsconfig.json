@@ -14,7 +14,8 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "@task/types/*": ["../../packages/types/src/*"]
     },
     "noEmit": true
   }

@@ -4,7 +4,7 @@ import {
   Link,
   Outlet,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { createServerFn } from '@tanstack/react-start'
@@ -14,21 +14,40 @@ import { NotFound } from '../components/NotFound'
 import appCss from '../styles/app.css?url'
 import { seo } from '../utils/seo'
 import { getSupabaseServerClient } from '../utils/supabase'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+import { TooltipProvider } from '../components/ui/tooltip'
+
+export interface AuthUser {
+  email: string
+  role: 'admin' | 'user'
+  id: string
+}
 
 const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
   const supabase = getSupabaseServerClient()
-  const { data, error: _error } = await supabase.auth.getUser()
+  const { data: authData, error: _error } = await supabase.auth.getUser()
 
-  if (!data.user?.email) {
+  if (!authData.user?.email) {
     return null
   }
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', authData.user.id)
+    .single()
+
   return {
-    email: data.user.email,
-  }
+    email: authData.user.email,
+    role: (profile?.role as 'admin' | 'user') ?? 'user',
+    id: authData.user.id,
+  } as AuthUser
 })
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient
+}>()({
   beforeLoad: async () => {
     const user = await fetchUser()
 
@@ -86,52 +105,26 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const { queryClient } = Route.useRouteContext()
+
   return (
-    <RootDocument>
-      <Outlet />
-    </RootDocument>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
+      </TooltipProvider>
+    </QueryClientProvider>
   )
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const { user } = Route.useRouteContext()
-
   return (
-    <html>
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: 'font-bold',
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{' '}
-          <Link
-            to="/posts"
-            activeProps={{
-              className: 'font-bold',
-            }}
-          >
-            Posts
-          </Link>
-          <div className="ml-auto">
-            {user ? (
-              <>
-                <span className="mr-2">{user.email}</span>
-                <Link to="/logout">Logout</Link>
-              </>
-            ) : (
-              <Link to="/login">Login</Link>
-            )}
-          </div>
-        </div>
-        <hr />
         {children}
         <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
