@@ -26,13 +26,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '~/components/ui/select'
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '~/components/ui/form'
 import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
 import { Textarea } from '~/components/ui/textarea'
 import { useAuth } from '~/hooks/use-auth'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Plus, Edit2, Loader2 } from 'lucide-react'
 import type { Product } from '@task/types/product.js'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+const productSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(255),
+  price: z.coerce.number().min(0, 'Price must be 0 or greater'),
+  description: z.string().max(1000).optional().nullable(),
+  categoryId: z.string().uuid('Please select a valid category').optional().nullable(),
+})
+
+type ProductFormValues = z.infer<typeof productSchema>
 
 export const Route = createFileRoute('/_authed/products')({
   component: ProductsPage,
@@ -43,7 +63,16 @@ function ProductsPage() {
   const queryClient = useQueryClient()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
+
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema as any),
+    defaultValues: {
+      name: '',
+      price: 0,
+      description: '',
+      categoryId: null,
+    },
+  })
 
   const { data: productsData, isLoading: isLoadingProducts } = useQuery({
     queryKey: ['products'],
@@ -87,26 +116,15 @@ function ProductsPage() {
     },
   })
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    
-    const name = formData.get('name') as string
-    const price = parseFloat(formData.get('price') as string)
-    const description = formData.get('description') as string || null
-    const categoryId = selectedCategoryId || null
-
+  const onSubmit = (values: ProductFormValues) => {
     if (editingProduct) {
       updateMutation.mutate({ 
         id: editingProduct.id, 
-        data: { name, price, description, categoryId } 
+        data: values 
       })
     } else {
       createMutation.mutate({ 
-        name, 
-        price, 
-        description,
-        categoryId,
+        ...values,
         isActive: true 
       })
     }
@@ -114,13 +132,23 @@ function ProductsPage() {
 
   const openCreateDialog = () => {
     setEditingProduct(null)
-    setSelectedCategoryId(undefined)
+    form.reset({
+      name: '',
+      price: 0,
+      description: '',
+      categoryId: null,
+    })
     setIsDialogOpen(true)
   }
 
   const openEditDialog = (product: Product) => {
     setEditingProduct(product)
-    setSelectedCategoryId(product.category?.id)
+    form.reset({
+      name: product.name,
+      price: product.price,
+      description: product.description || '',
+      categoryId: product.category?.id || null,
+    })
     setIsDialogOpen(true)
   }
 
@@ -131,79 +159,109 @@ function ProductsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Products</h1>
         <Button onClick={openCreateDialog} disabled={isPending}>
-          {createMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+          {createMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Plus className="mr-2 h-4 w-4" />}
           Create Product
         </Button>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={(open) => !isPending && setIsDialogOpen(open)}>
         <DialogContent className="sm:max-w-[425px]">
-          <form onSubmit={handleSubmit}>
-            <DialogHeader>
-              <DialogTitle>{editingProduct ? 'Edit Product' : 'Create Product'}</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
-                <Input 
-                  id="name" 
-                  name="name" 
-                  defaultValue={editingProduct?.name} 
-                  required 
-                  disabled={isPending}
-                  placeholder="Product name"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="categoryId">Category</Label>
-                <Select 
-                  value={selectedCategoryId} 
-                  onValueChange={setSelectedCategoryId}
-                  disabled={isPending}
-                >
-                  <SelectTrigger className='w-full'>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categoriesData?.categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="price">Price</Label>
-                <Input 
-                  id="price" 
-                  name="price" 
-                  type="number" 
-                  step="0.01" 
-                  defaultValue={editingProduct?.price} 
-                  required 
-                  disabled={isPending}
-                  placeholder="0.00"
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea 
-                  id="description" 
-                  name="description" 
-                  defaultValue={editingProduct?.description || ''} 
-                  disabled={isPending}
-                  placeholder="Product description"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit" disabled={isPending}>
-                {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-                {editingProduct ? 'Save Changes' : 'Create Product'}
-              </Button>
-            </DialogFooter>
-          </form>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <DialogHeader>
+                <DialogTitle>{editingProduct ? 'Edit Product' : 'Create Product'}</DialogTitle>
+              </DialogHeader>
+              
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} placeholder="Product name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="categoryId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      value={field.value || undefined}
+                      disabled={isPending}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categoriesData?.categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input 
+                        {...field} 
+                        type="number" 
+                        step="0.01" 
+                        disabled={isPending} 
+                        placeholder="0.00" 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        {...field} 
+                        value={field.value || ''}
+                        disabled={isPending} 
+                        placeholder="Product description" 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Button type="submit" disabled={isPending}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {editingProduct ? 'Save Changes' : 'Create Product'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
 
