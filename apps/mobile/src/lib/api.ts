@@ -9,6 +9,7 @@ import type {
 } from "@task/types/auth.js";
 import type {
   ListProductsRequestData,
+  ProductDetailSuccessData,
   ListProductsSuccessData,
 } from "@task/types/product.js";
 
@@ -110,6 +111,12 @@ export async function fetchProducts(filters: ListProductsRequestData = {}) {
       search: filters.search,
     },
   });
+
+  return response.data;
+}
+
+export async function fetchProductById(productId: string) {
+  const response = await request<ProductDetailSuccessData>(`/api/products/${productId}`);
 
   return response.data;
 }

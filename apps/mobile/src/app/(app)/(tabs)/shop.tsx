@@ -1,4 +1,5 @@
 import { useDeferredValue, useMemo, useState } from "react";
+import { router } from "expo-router";
 import {
   FlatList,
   Pressable,
@@ -148,7 +149,11 @@ export default function ShopScreen() {
           isInitialLoading ? (
             <ProductCardSkeleton width={cardWidth} />
           ) : (
-            <ProductCard product={item as (typeof products)[number]} width={cardWidth} />
+            <ProductCard
+              onPress={() => router.push(`/product/${(item as (typeof products)[number]).id}`)}
+              product={item as (typeof products)[number]}
+              width={cardWidth}
+            />
           )
         )}
         refreshControl={

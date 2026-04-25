@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import type { Product } from "@task/types/product.js";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
@@ -9,13 +9,15 @@ import { useTheme } from "@/hooks/use-theme";
 type ProductCardProps = {
   product: Product;
   width: number;
+  onPress?: () => void;
 };
 
-export function ProductCard({ product, width }: ProductCardProps) {
+export function ProductCard({ product, width, onPress }: ProductCardProps) {
   const theme = useTheme();
 
   return (
-    <View
+    <Pressable
+      onPress={onPress}
       style={[
         styles.card,
         {
@@ -60,7 +62,7 @@ export function ProductCard({ product, width }: ProductCardProps) {
 
         <ThemedText style={styles.price}>${product.price.toFixed(2)}</ThemedText>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
