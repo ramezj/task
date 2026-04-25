@@ -1,8 +1,10 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useSessionQuery } from "@/hooks/use-auth";
 import { useMyOrdersQuery } from "@/hooks/use-orders";
@@ -36,6 +38,19 @@ export default function OrderDetailsScreen() {
           />
         }
         showsVerticalScrollIndicator={false}>
+        <View style={styles.backButtonContainer}>
+          <Button onPress={() => router.back()} variant="outline" size="sm">
+            <Text>Back to Orders</Text>
+          </Button>
+        </View>
+
+        <View style={styles.header}>
+          <ThemedText type="smallBold" style={styles.eyebrow}>
+            Orders
+          </ThemedText>
+          <ThemedText type="subtitle">Your order details.</ThemedText>
+        </View>
+
         {ordersQuery.isLoading && !ordersQuery.data ? (
           <View style={styles.stateContainer}>
             <ThemedText themeColor="textSecondary">Loading order details...</ThemedText>
@@ -109,6 +124,9 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
   },
+  backButtonContainer: {
+    alignItems: "flex-start",
+  },
   stateContainer: {
     alignItems: "center",
     justifyContent: "center",
@@ -155,5 +173,12 @@ const styles = StyleSheet.create({
   },
   itemName: {
     flex: 1,
+  },
+  header: {
+    gap: Spacing.three,
+  },
+  eyebrow: {
+    color: "#f59e0b",
+    textTransform: "uppercase",
   },
 });
