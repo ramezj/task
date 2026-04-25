@@ -2,7 +2,9 @@ import { Image } from "expo-image";
 import type { Product } from "@task/types/product.js";
 import { Pressable, StyleSheet, View } from "react-native";
 
+import { Badge } from "@/components/ui/badge";
 import { ThemedText } from "@/components/themed-text";
+import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -16,51 +18,47 @@ export function ProductCard({ product, width, onPress }: ProductCardProps) {
   const theme = useTheme();
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.card,
-        {
-          borderColor: theme.backgroundElement,
-          backgroundColor: theme.background,
-          width,
-        },
-      ]}>
-      {product.imageUrl ? (
-        <Image
-          contentFit="cover"
-          source={{ uri: product.imageUrl }}
-          style={styles.image}
-        />
-      ) : (
-        <View
-          style={[
-            styles.imageFallback,
-            { backgroundColor: theme.backgroundElement },
-          ]}>
-          <ThemedText themeColor="textSecondary" type="smallBold">
-            No image
-          </ThemedText>
-        </View>
-      )}
+    <Pressable onPress={onPress} style={{ width }}>
+      <View
+        style={[
+          styles.card,
+          {
+            borderColor: theme.backgroundElement,
+            backgroundColor: theme.background,
+          },
+        ]}>
+        {product.imageUrl ? (
+          <Image
+            contentFit="cover"
+            source={{ uri: product.imageUrl }}
+            style={styles.image}
+          />
+        ) : (
+          <View
+            style={[
+              styles.imageFallback,
+              { backgroundColor: theme.backgroundElement },
+            ]}>
+            <ThemedText themeColor="textSecondary" type="smallBold">
+              No image
+            </ThemedText>
+          </View>
+        )}
 
-      <View style={styles.cardBody}>
-        <View style={styles.cardHeader}>
-          <ThemedText numberOfLines={2} style={styles.productName}>
-            {product.name}
-          </ThemedText>
-          {product.category ? (
-            <View
-              style={[
-                styles.categoryBadge,
-                { backgroundColor: theme.backgroundElement },
-              ]}>
-              <ThemedText type="small">{product.category.name}</ThemedText>
-            </View>
-          ) : null}
-        </View>
+        <View style={styles.cardBody}>
+          <View style={styles.cardHeader}>
+            <ThemedText numberOfLines={2} style={styles.productName}>
+              {product.name}
+            </ThemedText>
+            {product.category ? (
+              <Badge variant="default">
+                <Text>{product.category.name}</Text>
+              </Badge>
+            ) : null}
+          </View>
 
-        <ThemedText style={styles.price}>${product.price.toFixed(2)}</ThemedText>
+          <ThemedText style={styles.price}>${product.price.toFixed(2)}</ThemedText>
+        </View>
       </View>
     </Pressable>
   );
@@ -69,7 +67,7 @@ export function ProductCard({ product, width, onPress }: ProductCardProps) {
 const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
-    borderRadius: 24,
+    borderRadius: 8,
     overflow: "hidden",
   },
   image: {
@@ -83,22 +81,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cardBody: {
-    padding: Spacing.three,
+    padding: Spacing.four,
     gap: Spacing.two,
   },
   cardHeader: {
     gap: Spacing.one,
   },
-  productName: {
+productName: {
     fontSize: 16,
     lineHeight: 22,
     fontWeight: "700",
-  },
-  categoryBadge: {
-    alignSelf: "flex-start",
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
   },
   price: {
     fontSize: 18,
