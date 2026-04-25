@@ -122,7 +122,7 @@ export default function OrderDetailsScreen() {
           onPress={() => router.back()} 
           variant="default" 
           size="lg" 
-          className="w-full"
+          className="w-full h-14"
           style={{ width: '100%' }}
         >
           <Text>Back to Orders</Text>

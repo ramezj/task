@@ -77,7 +77,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Button
-          className="rounded-[18px]"
+          className="h-14 rounded-[18px]"
           disabled={logoutMutation.isPending}
           onPress={() => logoutMutation.mutate()}
           size="lg">

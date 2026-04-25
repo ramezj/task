@@ -125,13 +125,13 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           disabled={loginMutation.isPending}
           onPress={handleSubmit(onSubmit)}
           size="lg">
-          {loginMutation.isPending ? (
-            <ActivityIndicator color={theme.primaryForeground} size="small" />
-          ) : (
-            <Text className="text-base font-bold">
-              Sign In
-            </Text>
-          )}
+        {loginMutation.isPending ? (
+          <ActivityIndicator color={"white"} size="small" />
+        ) : (
+          <Text className="text-base font-bold">
+            Sign In
+          </Text>
+        )}
         </Button>
 
         <Pressable onPress={() => router.push("/forgot-password")}>

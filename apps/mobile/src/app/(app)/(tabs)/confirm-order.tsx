@@ -163,7 +163,7 @@ function ConfirmOrderContent() {
           <ThemedText type="smallBold">${cart.subtotal.toFixed(2)}</ThemedText>
         </View>
         <Button
-          className="rounded-[18px]"
+          className="rounded-[18px] h-14"
           disabled={placeOrderMutation.isPending}
           onPress={handleConfirmOrder}
           size="lg"

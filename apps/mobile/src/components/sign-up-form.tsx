@@ -180,7 +180,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
         onPress={handleSubmit(onSubmit)}
         size="lg">
         {registerMutation.isPending ? (
-          <ActivityIndicator color={theme.primaryForeground} size="small" />
+          <ActivityIndicator color={"white"} size="small" />
         ) : null}
         <Text className="text-base font-bold">
           Sign Up
