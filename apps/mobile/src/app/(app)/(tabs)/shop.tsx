@@ -1,8 +1,19 @@
-import { FlatList, StyleSheet, View, useWindowDimensions } from "react-native";
+import { useDeferredValue, useMemo, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  RefreshControl,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProductCard } from "@/components/product-card";
+import { ProductCardSkeleton } from "@/components/product-card-skeleton";
 import { ThemedText } from "@/components/themed-text";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Spacing } from "@/constants/theme";
 import { useCurrentUserQuery, useSessionQuery } from "@/hooks/use-auth";
 import { useProductsQuery } from "@/hooks/use-products";
@@ -11,33 +22,51 @@ import { useTheme } from "@/hooks/use-theme";
 export default function ShopScreen() {
   const theme = useTheme();
   const { width } = useWindowDimensions();
+  const [searchInput, setSearchInput] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const deferredSearchInput = useDeferredValue(searchInput);
+  const trimmedSearch = deferredSearchInput.trim();
   const sessionQuery = useSessionQuery();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
-  const productsQuery = useProductsQuery();
+  const categorySourceQuery = useProductsQuery();
+  const productsQuery = useProductsQuery({
+    category: selectedCategory,
+    search: trimmedSearch.length > 0 ? trimmedSearch : undefined,
+  });
   const user = currentUserQuery.data?.user;
   const products = productsQuery.data?.products ?? [];
+  const categoryOptions = useMemo(() => {
+    const categories = new Map<string, string>();
+
+    for (const product of categorySourceQuery.data?.products ?? []) {
+      if (product.category) {
+        categories.set(product.category.slug, product.category.name);
+      }
+    }
+
+    return Array.from(categories.entries())
+      .map(([value, label]) => ({ label, value }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+  }, [categorySourceQuery.data?.products]);
   const cardWidth = Math.min(Math.max((width - Spacing.four * 2 - Spacing.two) / 2, 150), 240);
+  const isFiltering = Boolean(selectedCategory || trimmedSearch.length > 0);
+  const isInitialLoading =
+    (productsQuery.isLoading && !productsQuery.data) ||
+    (categorySourceQuery.isLoading && !categorySourceQuery.data);
+  const skeletonItems = Array.from({ length: 6 }, (_, index) => `skeleton-${index}`);
+
+  async function handleRefresh() {
+    await Promise.all([productsQuery.refetch(), categorySourceQuery.refetch()]);
+  }
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
-      <FlatList
+      <FlatList<string | (typeof products)[number]>
         contentContainerStyle={styles.content}
         columnWrapperStyle={styles.row}
-        data={products}
-        key={products.length > 0 ? "grid" : "empty"}
-        keyExtractor={(item) => item.id}
-        ListEmptyComponent={
-          <View style={styles.emptyState}>
-            <ThemedText type="smallBold" style={styles.emptyTitle}>
-              {productsQuery.isLoading ? "Loading products..." : "No products yet"}
-            </ThemedText>
-            <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
-              {productsQuery.isError
-                ? productsQuery.error.message
-                : "Once the API returns products, they will show up here in the catalog."}
-            </ThemedText>
-          </View>
-        }
+        data={isInitialLoading ? skeletonItems : products}
+        key={isInitialLoading ? "skeleton" : products.length > 0 ? "grid" : "empty"}
+        keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         ListHeaderComponent={
           <View style={styles.header}>
             <ThemedText type="smallBold" style={styles.eyebrow}>
@@ -46,29 +75,89 @@ export default function ShopScreen() {
             <ThemedText type="subtitle">
               Welcome back{user?.name ? `, ${user.name}` : ""}.
             </ThemedText>
-            <ThemedText themeColor="textSecondary" style={styles.copy}>
-              Browse the latest active products from your API catalog.
-            </ThemedText>
-
-            <View style={[styles.bannerCard, { borderColor: theme.backgroundElement }]}>
-              <View style={styles.bannerText}>
-                <ThemedText type="smallBold">Available now</ThemedText>
-                <ThemedText themeColor="textSecondary">
-                  {productsQuery.isLoading
-                    ? "Syncing product catalog..."
-                    : `${products.length} active product${products.length === 1 ? "" : "s"} loaded`}
-                </ThemedText>
-              </View>
-              <ThemedText style={styles.bannerAccent}>
-                {user?.email ?? "Signed in"}
-              </ThemedText>
+            <View style={styles.filters}>
+              <Input
+                className="h-14 rounded-[18px] px-4"
+                onChangeText={setSearchInput}
+                placeholder="Search products"
+                returnKeyType="search"
+                value={searchInput}
+              />
+              <Select
+                onValueChange={setSelectedCategory}
+                options={categoryOptions}
+                placeholder="All categories"
+                value={selectedCategory}
+              />
             </View>
+
+            {isFiltering ? (
+              <View style={styles.activeFilters}>
+                <ThemedText themeColor="textSecondary" type="small">
+                  {selectedCategory
+                    ? categoryOptions.find((option) => option.value === selectedCategory)?.label
+                    : "All categories"}
+                  {trimmedSearch ? ` · “${trimmedSearch}”` : ""}
+                </ThemedText>
+                <Pressable
+                  onPress={() => {
+                    setSearchInput("");
+                    setSelectedCategory(undefined);
+                  }}>
+                  <ThemedText style={styles.clearFilters} type="smallBold">
+                    Clear filters
+                  </ThemedText>
+                </Pressable>
+              </View>
+            ) : null}
+          </View>
+        }
+        ListEmptyComponent={
+          <View style={styles.emptyState}>
+            <ThemedText type="smallBold" style={styles.emptyTitle}>
+              {productsQuery.isError
+                ? "Could not load products"
+                : isFiltering
+                  ? "No products match these filters"
+                  : "No products yet"}
+            </ThemedText>
+            <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
+              {productsQuery.isError
+                ? productsQuery.error.message
+                : isFiltering
+                  ? "Try a different category or clear the search term."
+                  : "Once the API returns products, they will show up here in the catalog."}
+            </ThemedText>
+            {isFiltering && !productsQuery.isError ? (
+              <Pressable
+                onPress={() => {
+                  setSearchInput("");
+                  setSelectedCategory(undefined);
+                }}
+                style={[
+                  styles.emptyButton,
+                  { backgroundColor: theme.backgroundElement },
+                ]}>
+                <ThemedText type="smallBold">Reset filters</ThemedText>
+              </Pressable>
+            ) : null}
           </View>
         }
         numColumns={2}
         renderItem={({ item }) => (
-          <ProductCard product={item} width={cardWidth} />
+          isInitialLoading ? (
+            <ProductCardSkeleton width={cardWidth} />
+          ) : (
+            <ProductCard product={item as (typeof products)[number]} width={cardWidth} />
+          )
         )}
+        refreshControl={
+          <RefreshControl
+            onRefresh={handleRefresh}
+            refreshing={productsQuery.isRefetching || categorySourceQuery.isRefetching}
+            tintColor={theme.text}
+          />
+        }
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
@@ -109,6 +198,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#f59e0b",
   },
+  filters: {
+    gap: Spacing.two,
+  },
+  activeFilters: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: Spacing.two,
+  },
+  clearFilters: {
+    color: "#f59e0b",
+  },
   row: {
     justifyContent: "space-between",
     gap: Spacing.two,
@@ -128,5 +229,11 @@ const styles = StyleSheet.create({
   emptyCopy: {
     textAlign: "center",
     maxWidth: 320,
+  },
+  emptyButton: {
+    marginTop: Spacing.two,
+    borderRadius: 999,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
 });
