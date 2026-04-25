@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeIn, FadeInDown, LinearTransition } from "react-native-reanimated";
 
 import { OrderHistoryCard } from "@/components/order-history-card";
 import { ThemedText } from "@/components/themed-text";
@@ -14,10 +15,12 @@ export default function OrdersScreen() {
   const sessionQuery = useSessionQuery();
   const ordersQuery = useMyOrdersQuery(sessionQuery.data?.access_token);
   const orders = ordersQuery.data?.orders ?? [];
+  const refreshKey = ordersQuery.isRefetching ? Date.now() : 0;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
-      <ScrollView
+      <Animated.ScrollView
+        layout={LinearTransition.duration(300)}
         contentContainerStyle={styles.content}
         refreshControl={
           <RefreshControl
@@ -27,12 +30,12 @@ export default function OrdersScreen() {
           />
         }
         showsVerticalScrollIndicator={false}>
-        <View style={styles.header}>
+        <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
           <ThemedText type="smallBold" style={styles.eyebrow}>
             Orders
           </ThemedText>
           <ThemedText type="subtitle">Your Order History</ThemedText>
-        </View>
+        </Animated.View>
 
         {ordersQuery.isLoading && !ordersQuery.data ? (
           <View style={styles.stateContainer}>
@@ -57,15 +60,19 @@ export default function OrdersScreen() {
         ) : null}
 
         {!ordersQuery.isLoading && !ordersQuery.isError
-          ? orders.map((order) => (
-              <OrderHistoryCard
-                key={order.id}
-                onPress={() => router.push(`/(app)/(tabs)/orders/${order.id}`)}
-                order={order}
-              />
+          ? orders.map((order, index) => (
+              <Animated.View
+                key={`${order.id}-${refreshKey}`}
+                entering={FadeIn.delay(index * 100).duration(300)}
+              >
+                <OrderHistoryCard
+                  onPress={() => router.push(`/(app)/(tabs)/orders/${order.id}`)}
+                  order={order}
+                />
+              </Animated.View>
             ))
           : null}
-      </ScrollView>
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }

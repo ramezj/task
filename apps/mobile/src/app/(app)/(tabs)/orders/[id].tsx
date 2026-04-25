@@ -1,7 +1,10 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, { FadeIn, FadeInDown, LinearTransition } from "react-native-reanimated";
 
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { ThemedText } from "@/components/themed-text";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -25,10 +28,12 @@ export default function OrderDetailsScreen() {
   const params = useLocalSearchParams<{ id?: string | string[] }>();
   const orderId = Array.isArray(params.id) ? params.id[0] : params.id;
   const order = ordersQuery.data?.orders.find((entry) => entry.id === orderId);
+  const refreshKey = ordersQuery.isRefetching ? Date.now() : 0;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
-      <ScrollView
+      <Animated.ScrollView
+        layout={LinearTransition.duration(300)}
         contentContainerStyle={styles.content}
         refreshControl={
           <RefreshControl
@@ -38,13 +43,14 @@ export default function OrderDetailsScreen() {
           />
         }
         showsVerticalScrollIndicator={false}
-        style={styles.scrollView}>
-        <View style={styles.header}>
+        style={styles.scrollView}
+        key={refreshKey}>
+        <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
           <ThemedText type="smallBold" style={styles.eyebrow}>
             Orders
           </ThemedText>
           <ThemedText type="subtitle">Your order details.</ThemedText>
-        </View>
+        </Animated.View>
 
         {ordersQuery.isLoading && !ordersQuery.data ? (
           <View style={styles.stateContainer}>
@@ -69,44 +75,48 @@ export default function OrderDetailsScreen() {
         ) : null}
 
         {order ? (
-          <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
-            <View style={styles.headerRow}>
-              <ThemedText type="smallBold">Order #{order.id.slice(0, 8)}</ThemedText>
-              <View style={[styles.badge, { backgroundColor: theme.backgroundElement }]}>
-                <ThemedText type="small">{formatOrderStatus(order.status)}</ThemedText>
+          <Animated.View entering={FadeIn.duration(400)}>
+            <Card className="!py-0" style={{ borderColor: theme.backgroundElement }}>
+            <View style={styles.cardContent}>
+              <View style={styles.headerRow}>
+                <ThemedText type="smallBold">Order #{order.id.slice(0, 8)}</ThemedText>
+                <Badge variant="default">
+                  <Text>{formatOrderStatus(order.status)}</Text>
+                </Badge>
+              </View>
+              <ThemedText themeColor="textSecondary" type="small">
+                {new Date(order.createdAt).toLocaleString()}
+              </ThemedText>
+
+              <View style={styles.summaryRow}>
+                <ThemedText themeColor="textSecondary">Items</ThemedText>
+                <ThemedText>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</ThemedText>
+              </View>
+              <View style={styles.summaryRow}>
+                <ThemedText themeColor="textSecondary">Total</ThemedText>
+                <ThemedText type="smallBold">${order.totalAmount.toFixed(2)}</ThemedText>
+              </View>
+
+              <View style={styles.itemsContainer}>
+                {order.items.map((item) => (
+                  <View key={item.id} style={[styles.itemCard, { borderColor: theme.backgroundElement }]}>
+                    <View style={styles.itemRow}>
+                      <ThemedText numberOfLines={1} style={styles.itemName} type="smallBold">
+                        {item.productName ?? "Product"}
+                      </ThemedText>
+                      <ThemedText>${(item.quantity * item.unitPrice).toFixed(2)}</ThemedText>
+                    </View>
+                    <ThemedText themeColor="textSecondary" type="small">
+                      Quantity: {item.quantity} x ${item.unitPrice.toFixed(2)}
+                    </ThemedText>
+                  </View>
+                ))}
               </View>
             </View>
-            <ThemedText themeColor="textSecondary" type="small">
-              {new Date(order.createdAt).toLocaleString()}
-            </ThemedText>
-
-            <View style={styles.summaryRow}>
-              <ThemedText themeColor="textSecondary">Items</ThemedText>
-              <ThemedText>{order.items.reduce((sum, item) => sum + item.quantity, 0)}</ThemedText>
-            </View>
-            <View style={styles.summaryRow}>
-              <ThemedText themeColor="textSecondary">Total</ThemedText>
-              <ThemedText type="smallBold">${order.totalAmount.toFixed(2)}</ThemedText>
-            </View>
-
-            <View style={styles.itemsContainer}>
-              {order.items.map((item) => (
-                <View key={item.id} style={[styles.itemCard, { borderColor: theme.backgroundElement }]}>
-                  <View style={styles.itemRow}>
-                    <ThemedText numberOfLines={1} style={styles.itemName} type="smallBold">
-                      {item.productName ?? "Product"}
-                    </ThemedText>
-                    <ThemedText>${(item.quantity * item.unitPrice).toFixed(2)}</ThemedText>
-                  </View>
-                  <ThemedText themeColor="textSecondary" type="small">
-                    Quantity: {item.quantity} x ${item.unitPrice.toFixed(2)}
-                  </ThemedText>
-                </View>
-              ))}
-            </View>
-          </View>
+          </Card>
+          </Animated.View>
         ) : null}
-      </ScrollView>
+      </Animated.ScrollView>
       <View style={styles.backButtonContainer}>
         <Button onPress={() => router.back()} variant="default" size="lg" className="w-full">
           <Text>Back to Orders</Text>
@@ -137,22 +147,15 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
     paddingVertical: Spacing.six,
   },
-  card: {
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: Spacing.three,
+  cardContent: {
+    padding: Spacing.four,
     gap: Spacing.two,
   },
   headerRow: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
+    alignItems: "center",
     gap: Spacing.two,
-  },
-  badge: {
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
   },
   summaryRow: {
     flexDirection: "row",
