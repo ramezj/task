@@ -28,7 +28,7 @@ export default function AppTabsLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: "#0000FF",
+          tabBarActiveTintColor: theme.text,
           tabBarInactiveTintColor: theme.textSecondary,
           tabBarStyle: {
             position: "absolute",
