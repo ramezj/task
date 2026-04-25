@@ -83,14 +83,18 @@ const styles = StyleSheet.create({
   cardBody: {
     padding: Spacing.four,
     gap: Spacing.two,
+    alignItems: "flex-start",
   },
   cardHeader: {
     gap: Spacing.one,
+    alignItems: "flex-start",
+    width: "100%",
   },
 productName: {
     fontSize: 16,
     lineHeight: 22,
     fontWeight: "700",
+    width: "100%",
   },
   price: {
     fontSize: 18,

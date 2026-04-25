@@ -135,7 +135,7 @@ return (
           </View>
         }
         ListEmptyComponent={
-          <View style={[styles.emptyState, { flex: 1 }]}>
+          <View style={styles.emptyState}>
             <ThemedText type="smallBold" style={styles.emptyTitle}>
               {productsQuery.isError
                 ? "Could not load products"
@@ -143,13 +143,13 @@ return (
                   ? "No products match these filters"
                   : "No products yet"}
             </ThemedText>
-            {/* <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
+            <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
               {productsQuery.isError
                 ? productsQuery.error.message
                 : isFiltering
                   ? "Try a different category or clear the search term."
-                  : "Once the API returns products, they will show up here in the catalog."}
-            </ThemedText> */}
+                  : "Our product catalog will appear here."}
+            </ThemedText>
             {isFiltering && !productsQuery.isError ? (
               <Pressable
                 onPress={() => {
@@ -238,6 +238,7 @@ const styles = StyleSheet.create({
     minHeight: 300,
   },
   emptyTitle: {
+    fontSize: 18,
     textAlign: "center",
   },
   emptyCopy: {
