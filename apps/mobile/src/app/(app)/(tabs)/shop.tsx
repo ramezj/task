@@ -78,7 +78,10 @@ export default function ShopScreen() {
             </ThemedText>
             <View style={styles.filters}>
               <Input
-                className="h-14 rounded-[18px] px-4"
+                className="h-14 px-4"
+                style={{
+                  fontSize: 16,
+                }}
                 onChangeText={setSearchInput}
                 placeholder="Search products"
                 returnKeyType="search"

@@ -51,12 +51,11 @@ export function Select({
           },
         ]}>
         <View style={styles.triggerText}>
-          <ThemedText type="smallBold">Category</ThemedText>
-          <ThemedText themeColor="textSecondary">
+          <ThemedText style={{ color: theme.text }}>
             {selectedOption?.label ?? placeholder}
           </ThemedText>
         </View>
-        <Feather color={theme.textSecondary} name="chevron-down" size={18} />
+        <Feather color={theme.text} name="chevron-down" size={18} />
       </Pressable>
 
       <Modal
@@ -129,11 +128,12 @@ function SelectRow({ isSelected, label, onPress }: SelectRowProps) {
 
 const styles = StyleSheet.create({
   trigger: {
-    minHeight: 56,
+    flex: 1,
+    height: 56,
     borderWidth: 1,
-    borderRadius: 18,
-    paddingHorizontal: Spacing.three,
-    paddingVertical: 12,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -141,7 +141,6 @@ const styles = StyleSheet.create({
   },
   triggerText: {
     flex: 1,
-    gap: 2,
   },
   overlay: {
     flex: 1,
@@ -151,7 +150,7 @@ const styles = StyleSheet.create({
   },
   sheet: {
     borderWidth: 1,
-    borderRadius: 24,
+    borderRadius: 14,
     maxHeight: "65%",
     padding: Spacing.three,
     gap: Spacing.two,
