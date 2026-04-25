@@ -27,7 +27,7 @@ export default function OrderDetailsScreen() {
   const order = ordersQuery.data?.orders.find((entry) => entry.id === orderId);
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <ScrollView
         contentContainerStyle={styles.content}
         refreshControl={
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   eyebrow: {
-    color: "#f59e0b",
+    color: "#000000",
     textTransform: "uppercase",
   },
 });

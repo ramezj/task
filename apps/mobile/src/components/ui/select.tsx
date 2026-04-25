@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.one,
   },
   closeText: {
-    color: "#f59e0b",
+    color: "#000000",
   },
   row: {
     minHeight: 48,

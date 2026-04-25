@@ -6,7 +6,7 @@ import { useTheme } from "@/hooks/use-theme";
 export default function AppTabsLayout() {
   const theme = useTheme();
 
-  return (
+return (
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -15,7 +15,9 @@ export default function AppTabsLayout() {
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           backgroundColor: theme.background,
-          borderTopColor: theme.backgroundElement,
+          borderTopColor: theme.textSecondary,
+          paddingBottom: 5,
+          paddingTop: 5,
         },
       }}>
       <Tabs.Screen

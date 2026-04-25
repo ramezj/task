@@ -61,7 +61,7 @@ export default function ShopScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <FlatList<string | (typeof products)[number]>
         contentContainerStyle={styles.content}
         columnWrapperStyle={styles.row}
@@ -74,7 +74,7 @@ export default function ShopScreen() {
               Shop
             </ThemedText>
             <ThemedText type="subtitle">
-              Welcome back{user?.name ? `, ${user.name}` : ""}.
+              Welcome back{user?.name ? `, ${user.name}` : ""}
             </ThemedText>
             <View style={styles.filters}>
               <Input
@@ -176,11 +176,11 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.four,
-    paddingBottom: Spacing.six,
     gap: Spacing.three,
+    flexGrow: 1,
   },
   eyebrow: {
-    color: "#f59e0b",
+    color: "#000000",
     textTransform: "uppercase",
   },
   copy: {
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
   },
   bannerAccent: {
     fontSize: 13,
-    color: "#f59e0b",
+    color: "#000000",
   },
   filters: {
     gap: Spacing.two,
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   clearFilters: {
-    color: "#f59e0b",
+    color: "#000000",
   },
   row: {
     justifyContent: "space-between",

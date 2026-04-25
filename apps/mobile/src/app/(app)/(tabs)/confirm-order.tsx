@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.three,
   },
   eyebrow: {
-    color: "#f59e0b",
+    color: "#000000",
     textTransform: "uppercase",
   },
   itemCard: {

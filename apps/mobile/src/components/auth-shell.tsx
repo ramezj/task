@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: 2.4,
     textTransform: "uppercase",
-    color: "#f59e0b",
+    color: "#000000",
     fontFamily: Fonts.mono,
   },
   title: {

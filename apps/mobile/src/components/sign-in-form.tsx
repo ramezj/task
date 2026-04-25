@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
   },
   errorText: {
-    color: "#ef4444",
+    color: "#000000",
     fontSize: 14,
     lineHeight: 20,
   },
@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
     gap: Spacing.one,
   },
   linkText: {
-    color: "#f59e0b",
+    color: "#000000",
   },
 });

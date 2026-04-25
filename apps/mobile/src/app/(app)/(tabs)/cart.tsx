@@ -28,7 +28,7 @@ export default function CartScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <FlatList
         contentContainerStyle={styles.content}
         data={cart.items}
@@ -67,7 +67,7 @@ export default function CartScreen() {
             <ThemedText type="smallBold" style={styles.eyebrow}>
               Cart
             </ThemedText>
-            <ThemedText type="subtitle">Review and checkout.</ThemedText>
+            <ThemedText type="subtitle">Review and checkout</ThemedText>
           </View>
         }
         renderItem={({ item }) => (
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.three,
   },
   eyebrow: {
-    color: "#f59e0b",
+    color: "#000000",
     textTransform: "uppercase",
   },
   itemCard: {
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   removeText: {
-    color: "#ef4444",
+    color: "#000000",
   },
   checkoutCard: {
     marginTop: Spacing.two,

@@ -19,7 +19,7 @@ export default function ProfileScreen() {
   const logoutMutation = useLogoutMutation();
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <View style={styles.container}>
         <ThemedText type="smallBold" style={styles.eyebrow}>
           Profile
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   eyebrow: {
-    color: "#f59e0b",
+    color: "#000000",
     textTransform: "uppercase",
   },
   card: {
