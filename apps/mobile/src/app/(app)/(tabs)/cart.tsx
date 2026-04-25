@@ -64,7 +64,7 @@ export default function CartScreen() {
         }
         ListHeaderComponent={
           <View style={styles.header}>
-            <ThemedText type="smallBold" style={styles.eyebrow}>
+            <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Cart
             </ThemedText>
             <ThemedText type="subtitle">Review and checkout</ThemedText>
@@ -97,7 +97,7 @@ export default function CartScreen() {
                   </Pressable>
                 </View>
                 <Pressable onPress={() => cart.removeItem(item.productId)}>
-                  <ThemedText style={styles.removeText} type="smallBold">
+                  <ThemedText style={{ color: theme.text }} type="smallBold">
                     Remove
                   </ThemedText>
                 </Pressable>
@@ -124,10 +124,6 @@ const styles = StyleSheet.create({
   header: {
     gap: Spacing.three,
     marginBottom: Spacing.three,
-  },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
   },
   itemCard: {
     borderWidth: 1,
@@ -163,9 +159,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
-  },
-  removeText: {
-    color: "#000000",
   },
   checkoutCard: {
     marginTop: Spacing.two,

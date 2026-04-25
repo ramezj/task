@@ -46,7 +46,7 @@ export default function OrderDetailsScreen() {
         style={styles.scrollView}
         key={refreshKey}>
         <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
-          <ThemedText type="smallBold" style={styles.eyebrow}>
+          <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
             Orders
           </ThemedText>
           <ThemedText type="subtitle">Your order details.</ThemedText>
@@ -184,9 +184,5 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: Spacing.three,
-  },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
   },
 });

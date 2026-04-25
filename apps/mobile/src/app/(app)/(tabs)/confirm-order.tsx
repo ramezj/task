@@ -131,7 +131,7 @@ function ConfirmOrderContent() {
         keyExtractor={(item) => item.productId}
         ListHeaderComponent={
           <View style={styles.header}>
-            <ThemedText type="smallBold" style={styles.eyebrow}>
+            <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Confirm Order
             </ThemedText>
             <ThemedText type="subtitle">Review your items before placing order.</ThemedText>
@@ -201,10 +201,6 @@ const styles = StyleSheet.create({
   header: {
     gap: Spacing.two,
     marginBottom: Spacing.three,
-  },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
   },
   itemCard: {
     borderWidth: 1,

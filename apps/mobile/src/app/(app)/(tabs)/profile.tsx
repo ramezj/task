@@ -1,5 +1,6 @@
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
@@ -18,10 +19,47 @@ export default function ProfileScreen() {
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
   const logoutMutation = useLogoutMutation();
 
+  if (!sessionQuery.data) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
+        <View style={styles.container}>
+          <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
+            Profile
+          </ThemedText>
+          <ThemedText type="subtitle">Manage your account</ThemedText>
+          <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
+            <ThemedText>Please sign in to view your profile.</ThemedText>
+          </View>
+          <Button
+            className="h-14 rounded-[18px]"
+            onPress={() => router.push("/sign-in")}
+            size="lg">
+            <Text className="text-base font-bold">Sign in</Text>
+          </Button>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (currentUserQuery.isLoading && !currentUserQuery.data) {
+    return (
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
+        <View style={styles.container}>
+          <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
+            Profile
+          </ThemedText>
+          <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
+            <ActivityIndicator color={theme.text} size="large" />
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <View style={styles.container}>
-        <ThemedText type="smallBold" style={styles.eyebrow}>
+        <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
           Profile
         </ThemedText>
         <ThemedText type="subtitle">Manage your account</ThemedText>
@@ -63,10 +101,6 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
     paddingBottom: 100,
-  },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
   },
   card: {
     borderWidth: 1,

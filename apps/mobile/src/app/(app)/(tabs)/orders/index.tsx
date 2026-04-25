@@ -33,13 +33,20 @@ export default function OrdersScreen() {
         }
         showsVerticalScrollIndicator={false}>
         <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
-          <ThemedText type="smallBold" style={styles.eyebrow}>
+          <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
             Orders
           </ThemedText>
           <ThemedText type="subtitle">Your Order History</ThemedText>
         </Animated.View>
 
-        {ordersQuery.isLoading && !ordersQuery.data ? (
+        {!sessionQuery.data ? (
+          <View style={styles.stateContainer}>
+            <ThemedText type="smallBold">Please sign in</ThemedText>
+            <ThemedText themeColor="textSecondary">
+              Sign in to view your orders.
+            </ThemedText>
+          </View>
+        ) : ordersQuery.isLoading && !ordersQuery.data ? (
           <View style={styles.skeletonContainer}>
             {skeletonItems.map((key, index) => (
               <Animated.View
@@ -50,37 +57,31 @@ export default function OrdersScreen() {
               </Animated.View>
             ))}
           </View>
-        ) : null}
-
-        {!ordersQuery.isLoading && ordersQuery.isError ? (
+        ) : ordersQuery.isError ? (
           <View style={styles.stateContainer}>
             <ThemedText type="smallBold">Could not load your orders</ThemedText>
             <ThemedText themeColor="textSecondary">{ordersQuery.error.message}</ThemedText>
           </View>
-        ) : null}
-
-        {!ordersQuery.isLoading && !ordersQuery.isError && orders.length === 0 ? (
+        ) : orders.length === 0 ? (
           <View style={styles.stateContainer}>
             <ThemedText type="smallBold">No orders yet</ThemedText>
             <ThemedText themeColor="textSecondary">
               Your placed orders will appear here.
             </ThemedText>
           </View>
-        ) : null}
-
-        {!ordersQuery.isLoading && !ordersQuery.isError
-          ? orders.map((order, index) => (
-              <Animated.View
-                key={`${order.id}-${refreshKey}`}
-                entering={FadeIn.delay(index * 100).duration(300)}
-              >
-                <OrderHistoryCard
-                  onPress={() => router.push(`/(app)/(tabs)/orders/${order.id}`)}
-                  order={order}
-                />
-              </Animated.View>
-            ))
-          : null}
+        ) : (
+          orders.map((order, index) => (
+            <Animated.View
+              key={`${order.id}-${refreshKey}`}
+              entering={FadeIn.delay(index * 100).duration(300)}
+            >
+              <OrderHistoryCard
+                onPress={() => router.push(`/(app)/(tabs)/orders/${order.id}`)}
+                order={order}
+              />
+            </Animated.View>
+          ))
+        )}
       </Animated.ScrollView>
     </SafeAreaView>
   );
@@ -97,10 +98,6 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: Spacing.three,
-  },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
   },
   stateContainer: {
     alignItems: "center",

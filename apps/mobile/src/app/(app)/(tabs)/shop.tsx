@@ -79,7 +79,7 @@ return (
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         ListHeaderComponent={
           <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
-            <ThemedText type="smallBold" style={styles.eyebrow}>
+            <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Shop
             </ThemedText>
             <ThemedText type="subtitle">
@@ -117,7 +117,7 @@ return (
                     setSearchInput("");
                     setSelectedCategory(undefined);
                   }}>
-                  <ThemedText style={styles.clearFilters} type="smallBold">
+                  <ThemedText style={{ color: theme.text }} type="smallBold">
                     Clear filters
                   </ThemedText>
                 </Pressable>
@@ -196,29 +196,15 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
     flexGrow: 1,
   },
-  eyebrow: {
-    color: "#000000",
-    textTransform: "uppercase",
-  },
-  copy: {
-    maxWidth: 480,
-  },
   header: {
     gap: Spacing.three,
     marginBottom: Spacing.two,
-  },
-  bannerCard: {
-    borderWidth: 1,
-    borderRadius: 24,
-    padding: Spacing.three,
-    gap: Spacing.two,
   },
   bannerText: {
     gap: Spacing.half,
   },
   bannerAccent: {
     fontSize: 13,
-    color: "#000000",
   },
   filters: {
     gap: Spacing.two,
@@ -228,9 +214,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     gap: Spacing.two,
-  },
-  clearFilters: {
-    color: "#000000",
   },
   row: {
     justifyContent: "space-between",
