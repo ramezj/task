@@ -63,6 +63,13 @@ export type ProductDetailSuccessResponse = ApiSuccessResponse<ProductDetailSucce
 export type ProductMutationSuccessResponse = ApiSuccessResponse<ProductMutationSuccessData>;
 export type DeleteProductSuccessResponse = ApiSuccessResponse<DeleteProductSuccessData>;
 
+export interface ListCategoriesSuccessData {
+  message: string;
+  categories: ProductCategory[];
+}
+
+export type ListCategoriesSuccessResponse = ApiSuccessResponse<ListCategoriesSuccessData>;
+
 export type ProductErrorResponse = ApiErrorResponse<
   "Validation Error" | "Unauthorized" | "Forbidden" | "Not Found" | ApiErrorName
 >;

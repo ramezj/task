@@ -14,7 +14,9 @@ const app = Fastify({
 const port = Number(process.env.PORT ?? 8080);
 
 app.register(cors, {
-  origin: [env.CLIENT_URL],
+  origin: [env.CLIENT_URL, 'http://127.0.0.1:3000', 'http://localhost:3000'],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 });
 
 // Register Auth Plugin

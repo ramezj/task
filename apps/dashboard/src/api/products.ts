@@ -4,10 +4,16 @@ import type {
   ListProductsSuccessData,
   ProductDetailSuccessData,
   CreateProductRequestData,
-  UpdateProductRequestData
+  UpdateProductRequestData,
+  ListCategoriesSuccessData
 } from "@task/types/product.js";
 
 export const productsApi = {
+  listCategories: async () => {
+    const response = await apiRequest<ListCategoriesSuccessData>("/api/products/categories");
+    return response.data;
+  },
+
   list: async (query?: ListProductsRequestData) => {
     const response = await apiRequest<ListProductsSuccessData>("/api/products", {
       query: query as Record<string, string | undefined>,

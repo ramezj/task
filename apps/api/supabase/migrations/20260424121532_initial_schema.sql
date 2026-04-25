@@ -67,8 +67,27 @@ CREATE POLICY "Public profiles are viewable by everyone." ON public.profiles FOR
 CREATE POLICY "Users can insert their own profile." ON public.profiles FOR INSERT WITH CHECK (auth.uid() = id);
 CREATE POLICY "Users can update own profile." ON public.profiles FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Categories are viewable by everyone." ON public.categories FOR SELECT USING (true);
 CREATE POLICY "Products are viewable by everyone." ON public.products FOR SELECT USING (true);
+CREATE POLICY "Admins can insert products." ON public.products FOR INSERT WITH CHECK (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+CREATE POLICY "Admins can update products." ON public.products FOR UPDATE USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+CREATE POLICY "Admins can delete products." ON public.products FOR DELETE USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+
+CREATE POLICY "Categories are viewable by everyone." ON public.categories FOR SELECT USING (true);
+CREATE POLICY "Admins can insert categories." ON public.categories FOR INSERT WITH CHECK (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+CREATE POLICY "Admins can update categories." ON public.categories FOR UPDATE USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
+CREATE POLICY "Admins can delete categories." ON public.categories FOR DELETE USING (
+  EXISTS (SELECT 1 FROM public.profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin')
+);
 
 CREATE POLICY "Users can view their own orders." ON public.orders FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can create their own orders." ON public.orders FOR INSERT WITH CHECK (auth.uid() = user_id);
