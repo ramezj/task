@@ -61,15 +61,12 @@ function DashboardHome() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-        <p className="text-muted-foreground">
-          Welcome to your admin dashboard.
-        </p>
+        <h1 className="text-xl font-medium tracking-tight">Dashboard Overview</h1>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <div key={stat.title} className="p-6 bg-card border rounded-xl shadow-sm space-y-2">
+          <div key={stat.title} className="p-6 bg-card border rounded-md shadow-sm space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-muted-foreground">{stat.title}</span>
               <stat.icon className={`size-4 ${stat.color}`} />
@@ -86,10 +83,10 @@ function DashboardHome() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="p-6 bg-card border rounded-xl shadow-sm min-h-[300px] flex items-center justify-center text-muted-foreground">
+        <div className="p-6 bg-card border rounded-md shadow-sm min-h-[300px] flex items-center justify-center text-muted-foreground">
           Recent Activity Chart (Coming Soon)
         </div>
-        <div className="p-6 bg-card border rounded-xl shadow-sm min-h-[300px] flex items-center justify-center text-muted-foreground">
+        <div className="p-6 bg-card border rounded-md shadow-sm min-h-[300px] flex items-center justify-center text-muted-foreground">
           Low Stock Alerts (Coming Soon)
         </div>
       </div>

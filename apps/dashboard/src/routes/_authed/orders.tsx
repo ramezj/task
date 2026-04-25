@@ -28,13 +28,9 @@ function OrdersPage() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
-        <p className="text-muted-foreground">
-          View and manage customer orders.
-        </p>
+        <h1 className="text-xl font-medium tracking-tight">Orders</h1>
       </div>
-
-      <div className="border rounded-xl">
+      <div className="border rounded-md">
         <Table>
           <TableHeader>
             <TableRow>
@@ -62,7 +58,7 @@ function OrdersPage() {
                   <TableCell className="font-mono text-xs">{order.id.slice(0, 8)}...</TableCell>
                   <TableCell>{order.userId.slice(0, 8)}...</TableCell>
                   <TableCell>
-                    <span className="capitalize px-2 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-medium">
+                    <span className="capitalize px-2 py-1 rounded-md bg-secondary text-secondary-foreground text-xs font-medium">
                       {order.status}
                     </span>
                   </TableCell>
