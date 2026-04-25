@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { ActivityIndicator, Pressable, StyleSheet, TextInput, View } from "react-native";
 
@@ -17,6 +18,7 @@ type SignInFormProps = {
 };
 
 export function SignInForm({ onSignUpPress }: SignInFormProps) {
+  const router = useRouter();
   const theme = useTheme();
   const passwordInputRef = React.useRef<TextInput>(null);
   const loginMutation = useLoginMutation();
@@ -118,29 +120,36 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
         <ThemedText style={{ color: theme.destructive }}>{loginMutation.error.message}</ThemedText>
       ) : null}
 
-      <Button
-        className="rounded-[18px]"
-        disabled={loginMutation.isPending}
-        onPress={handleSubmit(onSubmit)}
-        size="lg">
-        {loginMutation.isPending ? (
-          <ActivityIndicator color={theme.primaryForeground} size="small" />
-        ) : null}
-        <Text className="text-base font-bold">
-          Sign In
-        </Text>
-      </Button>
+<Button
+          className="h-14 rounded-[18px]"
+          disabled={loginMutation.isPending}
+          onPress={handleSubmit(onSubmit)}
+          size="lg">
+          {loginMutation.isPending ? (
+            <ActivityIndicator color={theme.primaryForeground} size="small" />
+          ) : (
+            <Text className="text-base font-bold">
+              Sign In
+            </Text>
+          )}
+        </Button>
 
-      <View style={styles.footerRow}>
-        <ThemedText themeColor="textSecondary" type="small">
-          Don't have an account?
-        </ThemedText>
-        <Pressable onPress={onSignUpPress}>
-          <ThemedText style={{ color: theme.text }} type="smallBold">
-            Sign up
+        <Pressable onPress={() => router.push("/forgot-password")}>
+          <ThemedText style={{ color: theme.text }} type="small">
+            Forgot password?
           </ThemedText>
         </Pressable>
-      </View>
+
+        <View style={styles.footerRow}>
+          <ThemedText themeColor="textSecondary" type="small">
+            Don't have an account?
+          </ThemedText>
+          <Pressable onPress={onSignUpPress}>
+            <ThemedText style={{ color: theme.text }} type="smallBold">
+              Sign up
+            </ThemedText>
+          </Pressable>
+        </View>
     </View>
   );
 }

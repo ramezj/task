@@ -1,8 +1,10 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Fonts, Spacing } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemedText } from "@/components/themed-text";
 
@@ -15,6 +17,8 @@ type AuthShellProps = PropsWithChildren<{
 
 export function AuthShell({ children, eyebrow, footer, subtitle, title }: AuthShellProps) {
   const theme = useTheme();
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const isDark = colorScheme === "dark";
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
@@ -23,9 +27,23 @@ export function AuthShell({ children, eyebrow, footer, subtitle, title }: AuthSh
         keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: theme.background }}>
 
+        <Pressable
+          onPress={toggleColorScheme}
+          style={{
+            position: "absolute",
+            top: 20,
+            right: 20,
+            zIndex: 999,
+            padding: 10,
+            borderRadius: 20,
+            backgroundColor: theme.backgroundElement,
+          }}>
+          <Feather name={isDark ? "sun" : "moon"} size={20} color={theme.text} />
+        </Pressable>
+
         <View style={styles.content}>
           <View style={styles.header}>
-            <ThemedText style={styles.eyebrow}>{eyebrow}</ThemedText>
+            <ThemedText style={[styles.eyebrow, { color: theme.text }]}>{eyebrow}</ThemedText>
             <ThemedText type="title" style={styles.title}>
               {title}
             </ThemedText>
@@ -73,7 +91,6 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     letterSpacing: 2.4,
     textTransform: "uppercase",
-    color: "#000000",
     fontFamily: Fonts.mono,
   },
   title: {
