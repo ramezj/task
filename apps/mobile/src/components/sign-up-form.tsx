@@ -79,7 +79,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           render={({ field: { onBlur, onChange, value } }) => (
             <Input
               autoCapitalize="words"
-              className=" rounded-[18px] px-4"
+              className="h-14 rounded-[18px] px-4"
               invalid={!!errors.name}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -110,7 +110,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
               ref={emailInputRef}
               autoCapitalize="none"
               autoComplete="email"
-              className=" rounded-[18px] px-4"
+              className="h-14 rounded-[18px] px-4"
               invalid={!!errors.email}
               keyboardType="email-address"
               onBlur={onBlur}
@@ -151,7 +151,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           render={({ field: { onBlur, onChange, value } }) => (
             <Input
               ref={passwordInputRef}
-              className=" rounded-[18px] px-4"
+              className="h-14 rounded-[18px] px-4"
               invalid={!!errors.password}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -175,7 +175,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
       ) : null}
 
       <Button
-        className="rounded-[18px]"
+        className="h-14 rounded-[18px]"
         disabled={registerMutation.isPending}
         onPress={handleSubmit(onSubmit)}
         size="lg">
