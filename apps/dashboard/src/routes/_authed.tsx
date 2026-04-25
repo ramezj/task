@@ -70,7 +70,7 @@ function AuthedLayout() {
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
           <div className="flex items-center gap-2">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger className="-ml-1 md:hidden" />
             <h1 className="font-semibold text-lg">Admin Dashboard</h1>
           </div>
           <ModeToggle />

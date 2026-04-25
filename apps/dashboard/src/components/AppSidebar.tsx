@@ -42,20 +42,19 @@ const navItems = [
 
 export function AppSidebar() {
   const location = useLocation()
-
-  return (
-    <Sidebar collapsible="icon">
-          <SidebarHeader className="border-b h-16 flex items-center justify-center">
-            <div className="flex items-center gap-2 px-4 w-full">
-              <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-                <Package className="size-6" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                <span className="truncate font-semibold text-base">Admin Shop</span>
-              </div>
-            </div>
-          </SidebarHeader>
-          <SidebarContent>
+return (
+  <Sidebar collapsible="icon">
+    <SidebarHeader className="border-b h-16 flex items-center justify-center">
+      <div className="flex items-center gap-2 px-4 w-full">
+        <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
+          <Package className="size-6" />
+        </div>
+        <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+          <span className="truncate font-semibold text-base">Admin Shop</span>
+        </div>
+      </div>
+    </SidebarHeader>
+    <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
               <SidebarGroupContent>
@@ -66,7 +65,6 @@ export function AppSidebar() {
                         asChild 
                         tooltip={item.title}
                         isActive={location.pathname === item.href}
-                        className="h-10"
                       >
                         <Link to={item.href}>
                           <item.icon className="size-5" />
@@ -79,10 +77,10 @@ export function AppSidebar() {
               </SidebarGroupContent>
             </SidebarGroup>
           </SidebarContent>
-          <SidebarFooter className="border-t">
+          <SidebarFooter className="border-t p-2">
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton variant="outline" asChild tooltip="Logout">
+                <SidebarMenuButton asChild tooltip="Logout" className='w-full'>
                   <Link to="/logout">
                     <LogOut className="size-4" />
                     <span>Logout</span>

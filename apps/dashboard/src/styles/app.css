@@ -6,13 +6,6 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -29,13 +22,9 @@
     color-scheme: light dark;
   }
 
-  * {
-    @apply border-gray-200 dark:border-gray-800;
-  }
-
   html,
   body {
-    @apply text-gray-900 bg-gray-50 dark:bg-gray-950 dark:text-gray-200;
+    @apply text-foreground bg-background;
   }
 
   .using-mouse * {
