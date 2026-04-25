@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState, useEffect } from "react";
 import { router } from "expo-router";
 import {
   FlatList,
@@ -30,7 +30,16 @@ export default function ShopScreen() {
   const { width } = useWindowDimensions();
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
-  const deferredSearchInput = useDeferredValue(searchInput);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchInput);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+  
+  const deferredSearchInput = useDeferredValue(debouncedSearch);
   const trimmedSearch = deferredSearchInput.trim();
   const sessionQuery = useSessionQuery();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
@@ -126,7 +135,7 @@ return (
           </View>
         }
         ListEmptyComponent={
-          <View style={styles.emptyState}>
+          <View style={[styles.emptyState, { flex: 1 }]}>
             <ThemedText type="smallBold" style={styles.emptyTitle}>
               {productsQuery.isError
                 ? "Could not load products"
@@ -134,13 +143,13 @@ return (
                   ? "No products match these filters"
                   : "No products yet"}
             </ThemedText>
-            <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
+            {/* <ThemedText themeColor="textSecondary" style={styles.emptyCopy}>
               {productsQuery.isError
                 ? productsQuery.error.message
                 : isFiltering
                   ? "Try a different category or clear the search term."
                   : "Once the API returns products, they will show up here in the catalog."}
-            </ThemedText>
+            </ThemedText> */}
             {isFiltering && !productsQuery.isError ? (
               <Pressable
                 onPress={() => {
@@ -195,6 +204,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     gap: Spacing.three,
     flexGrow: 1,
+    minHeight: 400,
   },
   header: {
     gap: Spacing.three,
@@ -221,12 +231,11 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   emptyState: {
-    borderRadius: 24,
-    paddingVertical: Spacing.four,
-    paddingHorizontal: Spacing.three,
-    alignItems: "center",
+    flex: 1,
     justifyContent: "center",
+    alignItems: "center",
     gap: Spacing.one,
+    minHeight: 300,
   },
   emptyTitle: {
     textAlign: "center",

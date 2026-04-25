@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
 import { ActivityIndicator } from "react-native";
+import { useState } from "react";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -34,6 +35,19 @@ export default function ProductDetailsScreen() {
   const productQuery = useProductQuery(productId);
   const product = productQuery.data?.product;
   const existingCartItem = product ? cart.items.find((item) => item.productId === product.id) : null;
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  function handleAddToCart() {
+    if (!product) return;
+    cart.addItem({
+      productId: product.id,
+      name: product.name,
+      imageUrl: product.imageUrl,
+      price: product.price,
+    });
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 2000);
+  }
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
@@ -91,23 +105,17 @@ export default function ProductDetailsScreen() {
 
               <Button
                 className="h-14 rounded-[18px]"
-                onPress={() =>
-                  cart.addItem({
-                    productId: product.id,
-                    name: product.name,
-                    imageUrl: product.imageUrl,
-                    price: product.price,
-                  })
-                }
+                onPress={handleAddToCart}
                 size="lg">
                 {!cart.isHydrated ? (
                   <ActivityIndicator color={theme.primaryForeground} size="small" />
-                ) : null}
-                <Text className="text-base font-bold">
-                  {existingCartItem
-                    ? `Add another (in cart: ${existingCartItem.quantity})`
-                    : "Add to cart"}
-                </Text>
+                ) : showSuccess ? (
+                  <Text className="text-base font-bold">Added!</Text>
+                ) : (
+                  <Text className="text-base font-bold">
+                    {existingCartItem ? "Add more" : "Add to cart"}
+                  </Text>
+                )}
               </Button>
             </View>
           </View>

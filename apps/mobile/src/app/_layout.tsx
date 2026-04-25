@@ -43,7 +43,7 @@ function RootNavigation() {
 
   if (sessionQuery.isLoading || (sessionQuery.data && currentUserQuery.isLoading)) {
     return (
-      <View style={[styles.centered, { backgroundColor: theme.background }]}>
+      <View style={[styles.centeredContent, { backgroundColor: theme.background }]}>
         <ActivityIndicator color={theme.text} size="large" />
       </View>
     );
@@ -51,7 +51,7 @@ function RootNavigation() {
 
   if (sessionQuery.data && currentUserQuery.isError) {
     return (
-      <View style={[styles.centered, styles.errorContainer, { backgroundColor: theme.background }]}>
+      <View style={[styles.centeredContent, styles.errorContainer, { backgroundColor: theme.background }]}>
         <View style={[styles.errorCard, { borderColor: theme.backgroundElement }]}>
           <ThemedText type="subtitle">Could not refresh your session.</ThemedText>
           <ThemedText themeColor="textSecondary">{currentUserQuery.error.message}</ThemedText>
@@ -88,10 +88,11 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  centered: {
+  centeredContent: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    minHeight: 300,
   },
   errorContainer: {
     padding: Spacing.four,

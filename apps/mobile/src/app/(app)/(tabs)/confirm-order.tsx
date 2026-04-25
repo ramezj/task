@@ -126,7 +126,7 @@ function ConfirmOrderContent() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
       <FlatList
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: 140 }]}
         data={cart.items}
         keyExtractor={(item) => item.productId}
         ListHeaderComponent={
@@ -134,29 +134,7 @@ function ConfirmOrderContent() {
             <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Confirm Order
             </ThemedText>
-            <ThemedText type="subtitle">Review your items before placing order.</ThemedText>
-          </View>
-        }
-        ListFooterComponent={
-          <View style={[styles.checkoutCard, { borderColor: theme.backgroundElement }]}>
-            <View style={styles.summaryRow}>
-              <ThemedText themeColor="textSecondary">Items</ThemedText>
-              <ThemedText>{totalItems}</ThemedText>
-            </View>
-            <View style={styles.summaryRow}>
-              <ThemedText themeColor="textSecondary">Subtotal</ThemedText>
-              <ThemedText type="smallBold">${cart.subtotal.toFixed(2)}</ThemedText>
-            </View>
-            <Button
-              className="h-14 rounded-[18px]"
-              disabled={placeOrderMutation.isPending}
-              onPress={handleConfirmOrder}
-              size="lg">
-              {placeOrderMutation.isPending ? (
-                <ActivityIndicator color={theme.primaryForeground} size="small" />
-              ) : null}
-              <Text className="text-base font-bold">Confirm Order</Text>
-            </Button>
+            <ThemedText type="subtitle">Review & Checkout</ThemedText>
           </View>
         }
         renderItem={({ item }) => (
@@ -179,6 +157,24 @@ function ConfirmOrderContent() {
         )}
         showsVerticalScrollIndicator={false}
       />
+      <View style={[styles.checkoutContainer, { backgroundColor: theme.background }]}>
+        <View style={styles.checkoutRow}>
+          <ThemedText themeColor="textSecondary">Items ({totalItems})</ThemedText>
+          <ThemedText type="smallBold">${cart.subtotal.toFixed(2)}</ThemedText>
+        </View>
+        <Button
+          className="rounded-[18px]"
+          disabled={placeOrderMutation.isPending}
+          onPress={handleConfirmOrder}
+          size="lg"
+          style={{ backgroundColor: "#22c55e" }}>
+          {placeOrderMutation.isPending ? (
+            <ActivityIndicator color={theme.primaryForeground} size="small" />
+          ) : (
+            <Text className="text-base font-bold" style={{ color: "#ffffff" }}>Confirm Order</Text>
+          )}
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -219,37 +215,37 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: Spacing.one,
   },
-  checkoutCard: {
-    marginTop: Spacing.two,
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: Spacing.three,
+  checkoutContainer: {
+    position: "absolute",
+    bottom: 95,
+    left: Spacing.four,
+    right: Spacing.four,
     gap: Spacing.two,
+    zIndex: 100,
   },
-  summaryRow: {
+  checkoutRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
   },
   successContainer: {
     flex: 1,
-    padding: Spacing.four,
     alignItems: "center",
     justifyContent: "center",
     gap: Spacing.three,
   },
   successBadge: {
-    width: 120,
-    height: 120,
-    borderRadius: 999,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     alignItems: "center",
     justifyContent: "center",
   },
   successTitle: {
-    textAlign: "center",
+    fontSize: 24,
+    fontWeight: "600",
   },
   successCopy: {
     textAlign: "center",
-    marginTop: Spacing.one,
+    maxWidth: 280,
   },
 });

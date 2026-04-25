@@ -30,7 +30,7 @@ export default function CartScreen() {
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <FlatList
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: 140 }]}
         data={cart.items}
         keyExtractor={(item) => item.productId}
         ListEmptyComponent={
@@ -41,33 +41,12 @@ export default function CartScreen() {
             </ThemedText>
           </View>
         }
-        ListFooterComponent={
-          cart.items.length > 0 ? (
-            <View style={[styles.checkoutCard, { borderColor: theme.backgroundElement }]}>
-              <View style={styles.summaryRow}>
-                <ThemedText themeColor="textSecondary">Items</ThemedText>
-                <ThemedText>{cart.totalItems}</ThemedText>
-              </View>
-              <View style={styles.summaryRow}>
-                <ThemedText themeColor="textSecondary">Subtotal</ThemedText>
-                <ThemedText type="smallBold">${cart.subtotal.toFixed(2)}</ThemedText>
-              </View>
-              <Button
-                className="h-14 rounded-[18px]"
-                disabled={!cart.isHydrated}
-                onPress={handleCheckout}
-                size="lg">
-                <Text className="text-base font-bold">Checkout</Text>
-              </Button>
-            </View>
-          ) : null
-        }
         ListHeaderComponent={
           <View style={styles.header}>
             <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Cart
             </ThemedText>
-            <ThemedText type="subtitle">Review and checkout</ThemedText>
+            <ThemedText type="subtitle">Your Cart</ThemedText>
           </View>
         }
         renderItem={({ item }) => (
@@ -107,6 +86,21 @@ export default function CartScreen() {
         )}
         showsVerticalScrollIndicator={false}
       />
+      {cart.items.length > 0 ? (
+        <View style={[styles.checkoutContainer, { backgroundColor: theme.background }]}>
+          <View style={styles.checkoutRow}>
+            <ThemedText themeColor="textSecondary">Items ({cart.totalItems})</ThemedText>
+            <ThemedText type="smallBold">${cart.subtotal.toFixed(2)}</ThemedText>
+          </View>
+          <Button
+            className="rounded-[18px]"
+            disabled={!cart.isHydrated}
+            onPress={handleCheckout}
+            size="lg">
+            <Text className="text-base font-bold">Checkout</Text>
+          </Button>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -119,7 +113,6 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
     flexGrow: 1,
-    paddingBottom: 100,
   },
   header: {
     gap: Spacing.three,
@@ -132,6 +125,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: Spacing.two,
     marginBottom: Spacing.two,
+  },
+  checkoutContainer: {
+    position: "absolute",
+    bottom: 95,
+    left: Spacing.four,
+    right: Spacing.four,
+    gap: Spacing.two,
+    zIndex: 100,
+  },
+  checkoutRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   itemImage: {
     width: 84,
@@ -159,18 +164,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
-  },
-  checkoutCard: {
-    marginTop: Spacing.two,
-    borderWidth: 1,
-    borderRadius: 20,
-    padding: Spacing.three,
-    gap: Spacing.two,
-  },
-  summaryRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
   },
   emptyState: {
     flex: 1,
