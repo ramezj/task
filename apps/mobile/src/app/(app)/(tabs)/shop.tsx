@@ -9,6 +9,11 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, {
+  FadeIn,
+  FadeInDown,
+  LinearTransition,
+} from "react-native-reanimated";
 
 import { ProductCard } from "@/components/product-card";
 import { ProductCardSkeleton } from "@/components/product-card-skeleton";
@@ -36,6 +41,8 @@ export default function ShopScreen() {
   });
   const user = currentUserQuery.data?.user;
   const products = productsQuery.data?.products ?? [];
+  const refreshKey = productsQuery.isRefetching ? Date.now() : 0;
+
   const categoryOptions = useMemo(() => {
     const categories = new Map<string, string>();
 
@@ -60,23 +67,25 @@ export default function ShopScreen() {
     await Promise.all([productsQuery.refetch(), categorySourceQuery.refetch()]);
   }
 
-  return (
+return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
-      <FlatList<string | (typeof products)[number]>
+      <Animated.FlatList
+        layout={LinearTransition.duration(300)}
         contentContainerStyle={styles.content}
         columnWrapperStyle={styles.row}
-        data={isInitialLoading ? skeletonItems : products}
-        key={isInitialLoading ? "skeleton" : products.length > 0 ? "grid" : "empty"}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data={isInitialLoading ? skeletonItems as any : products}
+        key={`${isInitialLoading ? "skeleton" : products.length > 0 ? "grid" : "empty"}-${refreshKey}`}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         ListHeaderComponent={
-          <View style={styles.header}>
+          <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
             <ThemedText type="smallBold" style={styles.eyebrow}>
               Shop
             </ThemedText>
             <ThemedText type="subtitle">
               Welcome back{user?.name ? `, ${user.name}` : ""}
             </ThemedText>
-            <View style={styles.filters}>
+            <Animated.View entering={FadeIn.delay(100).duration(300)} style={styles.filters}>
               <Input
                 className="h-14 px-4"
                 style={{
@@ -93,7 +102,7 @@ export default function ShopScreen() {
                 placeholder="All categories"
                 value={selectedCategory}
               />
-            </View>
+            </Animated.View>
 
             {isFiltering ? (
               <View style={styles.activeFilters}>
@@ -101,7 +110,7 @@ export default function ShopScreen() {
                   {selectedCategory
                     ? categoryOptions.find((option) => option.value === selectedCategory)?.label
                     : "All categories"}
-                  {trimmedSearch ? ` · “${trimmedSearch}”` : ""}
+                  {trimmedSearch ? ` · "${trimmedSearch}"` : ""}
                 </ThemedText>
                 <Pressable
                   onPress={() => {
@@ -114,7 +123,7 @@ export default function ShopScreen() {
                 </Pressable>
               </View>
             ) : null}
-          </View>
+          </Animated.View>
         }
         ListEmptyComponent={
           <View style={styles.emptyState}>
@@ -148,15 +157,19 @@ export default function ShopScreen() {
           </View>
         }
         numColumns={2}
-        renderItem={({ item }) => (
+        renderItem={({ item, index }) => (
           isInitialLoading ? (
             <ProductCardSkeleton width={cardWidth} />
           ) : (
-            <ProductCard
-              onPress={() => router.push(`/product/${(item as (typeof products)[number]).id}`)}
-              product={item as (typeof products)[number]}
-              width={cardWidth}
-            />
+            <Animated.View
+              entering={FadeIn.delay(index * 100).duration(300)}
+            >
+              <ProductCard
+                onPress={() => router.push(`/product/${(item as (typeof products)[number]).id}`)}
+                product={item as (typeof products)[number]}
+                width={cardWidth}
+              />
+            </Animated.View>
           )
         )}
         refreshControl={

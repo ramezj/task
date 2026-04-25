@@ -37,13 +37,8 @@ export default function OrderDetailsScreen() {
             tintColor={theme.text}
           />
         }
-        showsVerticalScrollIndicator={false}>
-        <View style={styles.backButtonContainer}>
-          <Button onPress={() => router.back()} variant="outline" size="sm">
-            <Text>Back to Orders</Text>
-          </Button>
-        </View>
-
+        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}>
         <View style={styles.header}>
           <ThemedText type="smallBold" style={styles.eyebrow}>
             Orders
@@ -112,6 +107,11 @@ export default function OrderDetailsScreen() {
           </View>
         ) : null}
       </ScrollView>
+      <View style={styles.backButtonContainer}>
+        <Button onPress={() => router.back()} variant="default" size="lg" className="w-full">
+          <Text>Back to Orders</Text>
+        </Button>
+      </View>
     </SafeAreaView>
   );
 }
@@ -120,12 +120,16 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
   },
   backButtonContainer: {
-    alignItems: "flex-start",
+    padding: Spacing.four,
+    paddingBottom: Spacing.four,
   },
   stateContainer: {
     alignItems: "center",
