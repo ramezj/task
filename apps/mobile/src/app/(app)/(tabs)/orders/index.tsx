@@ -34,13 +34,13 @@ export default function OrdersScreen() {
           <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
             Orders
           </ThemedText>
-          <ThemedText type="subtitle">Your Order History</ThemedText>
+          <ThemedText type="subtitle">Your Orders</ThemedText>
         </View>
 
         {!sessionQuery.data ? (
           <View style={styles.stateContainer}>
-            <ThemedText type="smallBold">Please sign in</ThemedText>
-            <ThemedText themeColor="textSecondary">
+            <ThemedText type="smallBold" style={{ fontSize: 18 }}>Please sign in</ThemedText>
+            <ThemedText style={styles.stateDescription} themeColor="textSecondary">
               Sign in to view your orders.
             </ThemedText>
           </View>
@@ -52,13 +52,13 @@ export default function OrdersScreen() {
           </View>
         ) : ordersQuery.isError ? (
           <View style={styles.stateContainer}>
-            <ThemedText type="smallBold">Could not load your orders</ThemedText>
-            <ThemedText themeColor="textSecondary">{ordersQuery.error.message}</ThemedText>
+            <ThemedText style={styles.stateTitle} type="smallBold">Could not load your orders</ThemedText>
+            <ThemedText style={styles.stateDescription} themeColor="textSecondary">{ordersQuery.error.message}</ThemedText>
           </View>
         ) : orders.length === 0 ? (
           <View style={styles.stateContainer}>
-            <ThemedText type="smallBold">No orders yet</ThemedText>
-            <ThemedText themeColor="textSecondary">
+            <ThemedText type="smallBold" style={{ fontSize: 18 }}>No orders yet</ThemedText>
+            <ThemedText style={styles.stateDescription} themeColor="textSecondary">
               Your placed orders will appear here.
             </ThemedText>
           </View>
@@ -85,15 +85,25 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
     paddingBottom: 100,
+    flexGrow: 1,
   },
   header: {
     gap: Spacing.three,
   },
   stateContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     gap: Spacing.one,
     paddingVertical: Spacing.six,
+    minHeight: 300,
+  },
+  stateTitle: {
+    fontSize: 18,
+    textAlign: "center",
+  },
+  stateDescription: {
+    textAlign: "center",
   },
   skeletonContainer: {
     gap: Spacing.two,
