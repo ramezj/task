@@ -1,56 +1,66 @@
-# Welcome to your Expo app 👋
+# Mini Shop Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application for customers to browse products and manage their orders.
 
-## Get started
+## Tech Stack
 
-1. Install dependencies
+- **Framework:** [Expo](https://expo.dev/) (React Native)
+- **Styling:** [NativeWind](https://www.nativewind.dev/) (Tailwind CSS for React Native)
+- **State Management:** TanStack Query
+- **Navigation:** Expo Router
+- **Auth/Database:** Supabase
 
-   ```bash
-   npm install
-   ```
+## Prerequisites
 
-2. Start the app
+- Node.js (v18+)
+- npm
+- Expo Go app on your physical device (optional, for testing)
 
-   ```bash
-   npx expo start
-   ```
+## Configuration
 
-In the output, you'll find options to open the app in a
+Create a `.env` file in the root of `apps/mobile/` with the following variables:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```env
+EXPO_PUBLIC_SUPABASE_URL=your_supabase_project_url
+EXPO_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+EXPO_PUBLIC_API_URL=http://localhost:8080
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+*Note: If testing on a physical device, replace `localhost` with your machine's local IP address (e.g., `http://192.168.1.50:8080`).*
 
-### Other setup steps
+## Installation
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+cd apps/mobile
+npm install
+```
 
-## Learn more
+## Running the App
 
-To learn more about developing your project with Expo, look at the following resources:
+### Start Expo Dev Server
+```bash
+npm run start
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Run on iOS Simulator
+```bash
+npm run ios
+```
 
-## Join the community
+### Run on Android Emulator
+```bash
+npm run android
+```
 
-Join our community of developers creating universal apps.
+## Features
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Product Catalog**: Browse and search through available products.
+- **Cart System**: Add products to a cart and manage quantities.
+- **Checkout**: Place orders securely.
+- **Order History**: View past orders and their current status.
+- **Auth**: Sign up and Sign in functionality.
+
+## Troubleshooting
+
+- **API Connection**: Ensure the `EXPO_PUBLIC_API_URL` is accessible from your device/emulator.
+- **Metro Bundler**: If the app hangs, try clearing the cache: `npx expo start -c`.

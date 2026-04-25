@@ -1,57 +1,57 @@
-# TanStack Start - Supabase Example
+# Mini Shop Admin Dashboard
 
-A TanStack Start example demonstrating integration with Supabase for authentication and database.
+The Admin Dashboard for managing products, categories, and viewing orders.
 
-- [TanStack Router Docs](https://tanstack.com/router)
-- [Supabase Documentation](https://supabase.com/docs)
+## Tech Stack
 
-## Start a new project based on this example
+- **Framework:** [TanStack Start](https://tanstack.com/start) (React)
+- **Styling:** Tailwind CSS + Shadcn UI
+- **State Management:** TanStack Query
+- **Routing:** TanStack Router
+- **Auth/Backend:** Supabase SSR
 
-To start a new project based on this example, run:
+## Prerequisites
 
-```sh
-npx gitpick TanStack/router/tree/main/examples/react/start-supabase-basic start-supabase-basic
-```
+- Node.js (v18+)
+- pnpm
 
-## Setup
+## Configuration
 
-This example requires Supabase configuration. The `.env` file contains the necessary environment variables:
+Create a `.env` file in the root of `apps/dashboard/` with the following variables:
 
 ```env
-SUPABASE_URL=your-project-url
-SUPABASE_ANON_KEY=your-anon-key
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_API_URL=http://localhost:8080
 ```
 
-You'll need to:
+## Installation
 
-1. Create a Supabase project at [supabase.com](https://supabase.com)
-2. Get your project URL and anon key from the project settings
-3. Update the `.env` file with your credentials
-
-## Getting Started
-
-From your terminal:
-
-```sh
+```bash
+cd apps/dashboard
 pnpm install
+```
+
+## Running the Dashboard
+
+### Development Mode
+```bash
 pnpm dev
 ```
+The application will be available at `http://localhost:3000` (default TanStack Start port).
 
-This starts your app in development mode, rebuilding assets on file changes.
+## Features
 
-## Build
+- **Dashboard Overview**: View key metrics like total revenue and active products.
+- **Product Management**: Create, edit, and toggle the status of products.
+- **Order Management**: View all customer orders and update their fulfillment status (Pending, Confirmed, Shipped, etc.).
+- **Authentication**: Secure login for administrative accounts.
 
-To build the app for production:
+## Deployment
 
-```sh
+To build the application for production:
+
+```bash
 pnpm build
+pnpm start
 ```
-
-## Supabase Integration
-
-This example demonstrates:
-
-- Authentication with Supabase Auth
-- Database queries with Supabase client
-- Real-time subscriptions
-- Server-side data fetching
