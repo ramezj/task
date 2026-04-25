@@ -4,6 +4,7 @@ import { Login } from '../components/Login'
 import { getSupabaseServerClient } from '../utils/supabase'
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '../components/ui/sidebar'
 import { AppSidebar } from '../components/AppSidebar'
+import { ModeToggle } from '../components/ThemeToggle'
 
 export const loginFn = createServerFn({ method: 'POST' })
   .inputValidator((d: { email: string; password: string }) => d)
@@ -67,9 +68,12 @@ function AuthedLayout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1 md:hidden" />
-          <h1>Dashboard</h1>
+        <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
+          <div className="flex items-center gap-2">
+            <SidebarTrigger className="-ml-1" />
+            <h1 className="font-semibold text-lg">Admin Dashboard</h1>
+          </div>
+          <ModeToggle />
         </header>
         <main className="flex-1 overflow-y-auto p-4">
           <Outlet />

@@ -17,6 +17,7 @@ import { getSupabaseServerClient } from '../utils/supabase'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { TooltipProvider } from '../components/ui/tooltip'
+import { ThemeProvider } from '../components/ThemeProvider'
 
 export interface AuthUser {
   email: string
@@ -108,13 +109,15 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <RootDocument>
-          <Outlet />
-        </RootDocument>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <RootDocument>
+            <Outlet />
+          </RootDocument>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 
