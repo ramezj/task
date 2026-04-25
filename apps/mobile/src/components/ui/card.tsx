@@ -1,15 +1,25 @@
 import { Text, TextClassContext } from '@/components/ui/text';
 import { cn } from '@/lib/utils';
 import { View } from 'react-native';
+import { useTheme } from '@/hooks/use-theme';
 
-function Card({ className, ...props }: React.ComponentProps<typeof View>) {
+function Card({ className, style, ...props }: React.ComponentProps<typeof View>) {
+  const theme = useTheme();
+  
   return (
     <TextClassContext.Provider value="text-card-foreground">
       <View
         className={cn(
-          'bg-card border-border flex flex-col gap-6 rounded-xl border py-6 shadow-sm shadow-black/5',
+          'flex flex-col gap-6 rounded-xl border py-6 shadow-sm shadow-black/5',
           className
         )}
+        style={[
+          { 
+            backgroundColor: theme.card, 
+            borderColor: theme.border 
+          },
+          style,
+        ]}
         {...props}
       />
     </TextClassContext.Provider>

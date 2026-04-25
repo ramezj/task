@@ -27,7 +27,7 @@ export function OrderHistoryCard({ order, onPress }: OrderHistoryCardProps) {
 
   return (
     <Pressable onPress={onPress}>
-      <Card className="p-4" style={{ borderColor: theme.backgroundElement }}>
+      <Card className="p-4" style={{ borderColor: theme.border }}>
         <View style={styles.orderRow}>
           <ThemedText type="smallBold">Order #{order.id.slice(0, 8)}</ThemedText>
           <Badge variant="default">
