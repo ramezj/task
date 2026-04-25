@@ -7,6 +7,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import "@/global.css";
 import { ThemedText } from "@/components/themed-text";
+import { ColorSchemeProvider, useColorScheme } from "@/hooks/use-color-scheme";
 import { Spacing } from "@/constants/theme";
 import {
   useAuthBootstrap,
@@ -23,6 +24,7 @@ function RootNavigation() {
   useAuthBootstrap();
 
   const theme = useTheme();
+  const { colorScheme } = useColorScheme();
   const sessionQuery = useSessionQuery();
   const logoutMutation = useLogoutMutation();
   const currentUserQuery = useCurrentUserQuery(sessionQuery.data);
@@ -66,7 +68,7 @@ function RootNavigation() {
         <Stack.Screen name="sign-up" options={{ animation: "fade" }} />
         <Stack.Screen name="(app)" />
       </Stack>
-      <StatusBar style="auto" />
+      <StatusBar style={colorScheme} />
     </>
   );
 }
@@ -74,11 +76,13 @@ function RootNavigation() {
 export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <CartProvider>
-          <RootNavigation />
-        </CartProvider>
-      </SafeAreaProvider>
+      <ColorSchemeProvider>
+        <SafeAreaProvider>
+          <CartProvider>
+            <RootNavigation />
+          </CartProvider>
+        </SafeAreaProvider>
+      </ColorSchemeProvider>
     </QueryClientProvider>
   );
 }

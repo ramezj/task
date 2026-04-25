@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from "react";
-import { ScrollView, StyleSheet, View, useColorScheme } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Fonts, Spacing } from "@/constants/theme";
@@ -15,8 +15,6 @@ type AuthShellProps = PropsWithChildren<{
 
 export function AuthShell({ children, eyebrow, footer, subtitle, title }: AuthShellProps) {
   const theme = useTheme();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme !== "light";
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
@@ -24,18 +22,6 @@ export function AuthShell({ children, eyebrow, footer, subtitle, title }: AuthSh
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         style={{ backgroundColor: theme.background }}>
-        <View
-          style={[
-            styles.heroOrb,
-            { backgroundColor: isDark ? "rgba(251, 191, 36, 0.18)" : "rgba(249, 115, 22, 0.12)" },
-          ]}
-        />
-        <View
-          style={[
-            styles.secondaryOrb,
-            { backgroundColor: isDark ? "rgba(249, 115, 22, 0.14)" : "rgba(59, 130, 246, 0.12)" },
-          ]}
-        />
 
         <View style={styles.content}>
           <View style={styles.header}>
@@ -52,8 +38,8 @@ export function AuthShell({ children, eyebrow, footer, subtitle, title }: AuthSh
             style={[
               styles.card,
               {
-                backgroundColor: isDark ? "rgba(255, 255, 255, 0.06)" : "#ffffff",
-                borderColor: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(15, 23, 42, 0.08)",
+                backgroundColor: theme.card,
+                borderColor: theme.border,
               },
             ]}>
             {children}
@@ -103,21 +89,5 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingTop: Spacing.one,
-  },
-  heroOrb: {
-    position: "absolute",
-    width: 220,
-    height: 220,
-    borderRadius: 999,
-    top: 20,
-    left: -70,
-  },
-  secondaryOrb: {
-    position: "absolute",
-    width: 260,
-    height: 260,
-    borderRadius: 999,
-    right: -90,
-    top: 160,
   },
 });

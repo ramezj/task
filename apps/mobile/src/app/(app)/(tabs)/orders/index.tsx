@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, { FadeIn, FadeInDown, LinearTransition } from "react-native-reanimated";
 
 import { OrderHistoryCard } from "@/components/order-history-card";
+import { OrderCardSkeleton } from "@/components/order-card-skeleton";
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
 import { useMyOrdersQuery } from "@/hooks/use-orders";
@@ -16,6 +17,7 @@ export default function OrdersScreen() {
   const ordersQuery = useMyOrdersQuery(sessionQuery.data?.access_token);
   const orders = ordersQuery.data?.orders ?? [];
   const refreshKey = ordersQuery.isRefetching ? Date.now() : 0;
+  const skeletonItems = Array.from({ length: 3 }, (_, i) => `skeleton-${i}`);
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
@@ -38,8 +40,15 @@ export default function OrdersScreen() {
         </Animated.View>
 
         {ordersQuery.isLoading && !ordersQuery.data ? (
-          <View style={styles.stateContainer}>
-            <ThemedText themeColor="textSecondary">Loading your orders...</ThemedText>
+          <View style={styles.skeletonContainer}>
+            {skeletonItems.map((key, index) => (
+              <Animated.View
+                key={key}
+                entering={FadeIn.delay(index * 100).duration(300)}
+              >
+                <OrderCardSkeleton />
+              </Animated.View>
+            ))}
           </View>
         ) : null}
 
@@ -98,5 +107,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: Spacing.one,
     paddingVertical: Spacing.six,
+  },
+  skeletonContainer: {
+    gap: Spacing.two,
   },
 });
