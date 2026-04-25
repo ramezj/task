@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
+    paddingBottom: 100,
   },
   backButtonContainer: {
     padding: Spacing.four,

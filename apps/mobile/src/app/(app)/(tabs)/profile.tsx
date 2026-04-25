@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: Spacing.four,
     gap: Spacing.three,
+    paddingBottom: 100,
   },
   eyebrow: {
     color: "#000000",

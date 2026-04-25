@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
     flexGrow: 1,
+    paddingBottom: 100,
   },
   header: {
     gap: Spacing.three,

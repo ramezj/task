@@ -84,6 +84,7 @@ const styles = StyleSheet.create({
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
+    paddingBottom: 100,
   },
   header: {
     gap: Spacing.three,

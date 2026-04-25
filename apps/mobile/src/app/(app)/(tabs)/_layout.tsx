@@ -13,15 +13,24 @@ return (
         animation: "fade",
         tabBarActiveTintColor: "#0000FF",
         tabBarInactiveTintColor: theme.textSecondary,
-        tabBarStyle: {
+tabBarStyle: {
+          position: "absolute",
+          bottom: 20,
+          marginHorizontal: 20,
+          height: 60,
+          borderRadius: 30,
           backgroundColor: theme.background,
-          paddingBottom: 5,
-          paddingTop: 5,
+          paddingBottom: 0,
+          paddingTop: 0,
           shadowColor: "#000000",
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 2,
-          elevation: 2,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.15,
+          shadowRadius: 8,
+          elevation: 8,
+          borderWidth: 0,
+        },
+        tabBarItemStyle: {
+          paddingVertical: 4,
         },
       }}>
       <Tabs.Screen
