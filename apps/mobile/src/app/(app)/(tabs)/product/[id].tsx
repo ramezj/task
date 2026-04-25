@@ -1,10 +1,14 @@
 import { Image } from "expo-image";
 import { useLocalSearchParams } from "expo-router";
+import { ActivityIndicator } from "react-native";
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ThemedText } from "@/components/themed-text";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { Spacing } from "@/constants/theme";
+import { useCart } from "@/hooks/use-cart";
 import { useProductQuery } from "@/hooks/use-products";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -24,10 +28,12 @@ function ProductDetailsSkeleton() {
 
 export default function ProductDetailsScreen() {
   const theme = useTheme();
+  const cart = useCart();
   const params = useLocalSearchParams<{ id?: string | string[] }>();
   const productId = Array.isArray(params.id) ? params.id[0] : params.id;
   const productQuery = useProductQuery(productId);
   const product = productQuery.data?.product;
+  const existingCartItem = product ? cart.items.find((item) => item.productId === product.id) : null;
 
   return (
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]}>
@@ -82,6 +88,27 @@ export default function ProductDetailsScreen() {
               <ThemedText themeColor="textSecondary" style={styles.description}>
                 {product.description?.trim() || "No description available for this product yet."}
               </ThemedText>
+
+              <Button
+                className="h-14 rounded-[18px]"
+                onPress={() =>
+                  cart.addItem({
+                    productId: product.id,
+                    name: product.name,
+                    imageUrl: product.imageUrl,
+                    price: product.price,
+                  })
+                }
+                size="lg">
+                {!cart.isHydrated ? (
+                  <ActivityIndicator color={theme.primaryForeground} size="small" />
+                ) : null}
+                <Text className="text-base font-bold">
+                  {existingCartItem
+                    ? `Add another (in cart: ${existingCartItem.quantity})`
+                    : "Add to cart"}
+                </Text>
+              </Button>
             </View>
           </View>
         ) : null}

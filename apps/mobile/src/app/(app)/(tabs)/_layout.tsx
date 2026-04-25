@@ -52,6 +52,12 @@ export default function AppTabsLayout() {
           href: null,
         }}
       />
+      <Tabs.Screen
+        name="confirm-order"
+        options={{
+          href: null,
+        }}
+      />
     </Tabs>
   );
 }

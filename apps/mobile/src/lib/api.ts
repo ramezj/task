@@ -12,6 +12,11 @@ import type {
   ProductDetailSuccessData,
   ListProductsSuccessData,
 } from "@task/types/product.js";
+import type {
+  MyOrdersSuccessData,
+  PlaceOrderRequestData,
+  PlaceOrderSuccessData,
+} from "@task/types/order.js";
 
 export type { AuthenticatedUser } from "@task/types/auth.js";
 
@@ -117,6 +122,27 @@ export async function fetchProducts(filters: ListProductsRequestData = {}) {
 
 export async function fetchProductById(productId: string) {
   const response = await request<ProductDetailSuccessData>(`/api/products/${productId}`);
+
+  return response.data;
+}
+
+export async function placeOrder(
+  accessToken: string,
+  payload: PlaceOrderRequestData,
+) {
+  const response = await request<PlaceOrderSuccessData>("/api/orders", {
+    method: "POST",
+    accessToken,
+    body: payload,
+  });
+
+  return response.data;
+}
+
+export async function fetchMyOrders(accessToken: string) {
+  const response = await request<MyOrdersSuccessData>("/api/orders/my", {
+    accessToken,
+  });
 
   return response.data;
 }

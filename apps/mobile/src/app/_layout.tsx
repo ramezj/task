@@ -16,6 +16,7 @@ import {
 } from "@/hooks/use-auth";
 import { ApiClientError } from "@/lib/api";
 import { queryClient } from "@/lib/query-client";
+import { CartProvider } from "@/providers/cart-provider";
 import { useTheme } from "@/hooks/use-theme";
 
 function RootNavigation() {
@@ -74,7 +75,9 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <RootNavigation />
+        <CartProvider>
+          <RootNavigation />
+        </CartProvider>
       </SafeAreaProvider>
     </QueryClientProvider>
   );
