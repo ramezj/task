@@ -12,15 +12,15 @@ const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
 
 const TEST_CREDENTIALS = {
   admin: {
-    email: "admin@minishop.test",
-    password: "Admin12345!",
-    name: "Mini Shop Admin",
+    email: "admin@test.com",
+    password: "admin12345",
+    name: "Admin",
     role: "admin",
   },
   customer: {
-    email: "customer@minishop.test",
-    password: "Customer12345!",
-    name: "Mini Shop Customer",
+    email: "customer@test.com",
+    password: "customer12345",
+    name: "Customer",
     role: "user",
   },
 } as const;
