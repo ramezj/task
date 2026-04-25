@@ -37,23 +37,35 @@ export async function updateOrderStatusController(
     return sendError(reply, 400, "Validation Error", details || "Validation failed.");
   }
 
-  const { data, error } = await supabase
+  // Perform the update
+  const { data: updatedRow, error: updateError } = await supabase
     .from("orders")
     .update({ status: parsedBody.data.status })
     .eq("id", parsedParams.data.id)
-    .select(orderSelect)
+    .select("id")
     .maybeSingle();
 
-  if (error) {
-    throw error;
+  if (updateError) {
+    throw updateError;
   }
 
-  if (!data) {
-    return sendError(reply, 404, "Not Found", "Order not found");
+  if (!updatedRow) {
+    return sendError(reply, 404, "Not Found", `Order not found with ID: ${parsedParams.data.id}`);
+  }
+
+  // Fetch the full order with items and products
+  const { data: fullOrder, error: fetchError } = await supabase
+    .from("orders")
+    .select(orderSelect)
+    .eq("id", updatedRow.id)
+    .single();
+
+  if (fetchError) {
+    throw fetchError;
   }
 
   return sendSuccess(reply, 200, {
     message: "Order status updated successfully.",
-    order: mapOrderRow(data),
+    order: mapOrderRow(fullOrder),
   });
 }
