@@ -76,6 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: Spacing.two,
   },
   itemList: {
     marginTop: Spacing.one,
@@ -88,5 +89,6 @@ const styles = StyleSheet.create({
   },
   itemName: {
     flex: 1,
+    flexShrink: 1,
   },
 });

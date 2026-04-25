@@ -78,14 +78,14 @@ return (
         key={`${isInitialLoading ? "skeleton" : products.length > 0 ? "grid" : "empty"}-${refreshKey}`}
         keyExtractor={(item) => (typeof item === "string" ? item : item.id)}
         ListHeaderComponent={
-          <Animated.View entering={FadeInDown.duration(400)} style={styles.header}>
+          <View style={styles.header}>
             <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
               Shop
             </ThemedText>
             <ThemedText type="subtitle">
               Welcome back{user?.name ? `, ${user.name}` : ""}
             </ThemedText>
-            <Animated.View entering={FadeIn.delay(100).duration(300)} style={styles.filters}>
+            <View style={styles.filters}>
               <Input
                 className="h-14 px-4"
                 style={{
@@ -102,7 +102,7 @@ return (
                 placeholder="All categories"
                 value={selectedCategory}
               />
-            </Animated.View>
+            </View>
 
             {isFiltering ? (
               <View style={styles.activeFilters}>
@@ -123,7 +123,7 @@ return (
                 </Pressable>
               </View>
             ) : null}
-          </Animated.View>
+          </View>
         }
         ListEmptyComponent={
           <View style={styles.emptyState}>
@@ -191,14 +191,14 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.two,
+    paddingTop: Spacing.four,
     paddingBottom: 100,
     gap: Spacing.three,
     flexGrow: 1,
   },
   header: {
     gap: Spacing.three,
-    marginBottom: Spacing.two,
+    marginBottom: Spacing.three,
   },
   bannerText: {
     gap: Spacing.half,

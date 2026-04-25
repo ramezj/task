@@ -34,7 +34,7 @@ export default function OrderDetailsScreen() {
     <SafeAreaView style={[styles.safeArea, { backgroundColor: theme.background }]} edges={["top", "left", "right"]}>
       <Animated.ScrollView
         layout={LinearTransition.duration(300)}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: 140 }]}
         refreshControl={
           <RefreshControl
             onRefresh={ordersQuery.refetch}
@@ -117,8 +117,14 @@ export default function OrderDetailsScreen() {
           </Animated.View>
         ) : null}
       </Animated.ScrollView>
-      <View style={styles.backButtonContainer}>
-        <Button onPress={() => router.back()} variant="default" size="lg" className="w-full">
+      <View style={[styles.backButtonContainer, { backgroundColor: theme.background }]}>
+        <Button 
+          onPress={() => router.back()} 
+          variant="default" 
+          size="lg" 
+          className="w-full"
+          style={{ width: '100%' }}
+        >
           <Text>Back to Orders</Text>
         </Button>
       </View>
@@ -136,11 +142,14 @@ const styles = StyleSheet.create({
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
-    paddingBottom: 100,
+    paddingBottom: 140,
   },
   backButtonContainer: {
-    padding: Spacing.four,
-    paddingBottom: Spacing.four,
+    position: 'absolute',
+    bottom: 95,
+    left: Spacing.four,
+    right: Spacing.four,
+    zIndex: 100,
   },
   stateContainer: {
     alignItems: "center",

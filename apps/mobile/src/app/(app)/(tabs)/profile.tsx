@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { ThemedText } from "@/components/themed-text";
 import { Spacing } from "@/constants/theme";
@@ -27,9 +28,9 @@ export default function ProfileScreen() {
             Profile
           </ThemedText>
           <ThemedText type="subtitle">Manage your account</ThemedText>
-          <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
+          <Card className="p-4">
             <ThemedText>Please sign in to view your profile.</ThemedText>
-          </View>
+          </Card>
           <Button
             className="h-14 rounded-[18px]"
             onPress={() => router.push("/sign-in")}
@@ -48,9 +49,9 @@ export default function ProfileScreen() {
           <ThemedText type="smallBold" style={{ color: theme.textSecondary, textTransform: "uppercase" }}>
             Profile
           </ThemedText>
-          <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
+          <Card className="p-4">
             <ActivityIndicator color={theme.text} size="large" />
-          </View>
+          </Card>
         </View>
       </SafeAreaView>
     );
@@ -67,13 +68,13 @@ export default function ProfileScreen() {
           Sign-out is still wired into Supabase session state and clears the auth queries.
         </ThemedText>
 
-        <View style={[styles.card, { borderColor: theme.backgroundElement }]}>
+        <Card className="p-4">
           <ThemedText type="smallBold">Signed in as</ThemedText>
           <ThemedText>{currentUserQuery.data?.user.name ?? "Unnamed user"}</ThemedText>
           <ThemedText themeColor="textSecondary">
             {currentUserQuery.data?.user.email ?? "No email available"}
           </ThemedText>
-        </View>
+        </Card>
 
         <Button
           className="h-14 rounded-[18px]"
@@ -101,11 +102,5 @@ const styles = StyleSheet.create({
     padding: Spacing.four,
     gap: Spacing.three,
     paddingBottom: 100,
-  },
-  card: {
-    borderWidth: 1,
-    borderRadius: 24,
-    padding: Spacing.four,
-    gap: Spacing.one,
   },
 });

@@ -46,22 +46,22 @@ const styles = StyleSheet.create({
   },
   lineLg: {
     height: 18,
-    width: "40%",
+    width: 100,
     borderRadius: 999,
   },
   lineSm: {
     height: 14,
-    width: "60%",
+    width: 120,
     borderRadius: 999,
   },
   badge: {
     height: 24,
-    width: "30%",
+    width: 70,
     borderRadius: 999,
   },
   summary: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    gap: Spacing.two,
     marginTop: Spacing.one,
   },
   items: {
