@@ -175,7 +175,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: Spacing.four,
-    paddingTop: Spacing.four,
+    paddingTop: Spacing.two,
+    paddingBottom: Spacing.two,
     gap: Spacing.three,
     flexGrow: 1,
   },
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   header: {
     gap: Spacing.three,
-    marginBottom: Spacing.four,
+    marginBottom: Spacing.two,
   },
   bannerCard: {
     borderWidth: 1,

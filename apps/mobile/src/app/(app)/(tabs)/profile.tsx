@@ -24,7 +24,7 @@ export default function ProfileScreen() {
         <ThemedText type="smallBold" style={styles.eyebrow}>
           Profile
         </ThemedText>
-        <ThemedText type="subtitle">Manage your account.</ThemedText>
+        <ThemedText type="subtitle">Manage your account</ThemedText>
         <ThemedText themeColor="textSecondary">
           Sign-out is still wired into Supabase session state and clears the auth queries.
         </ThemedText>

@@ -11,13 +11,17 @@ return (
       screenOptions={{
         headerShown: false,
         animation: "fade",
-        tabBarActiveTintColor: theme.text,
+        tabBarActiveTintColor: "#0000FF",
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           backgroundColor: theme.background,
-          borderTopColor: theme.textSecondary,
           paddingBottom: 5,
           paddingTop: 5,
+          shadowColor: "#000000",
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 2,
+          elevation: 2,
         },
       }}>
       <Tabs.Screen

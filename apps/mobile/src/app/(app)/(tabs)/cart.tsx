@@ -35,9 +35,9 @@ export default function CartScreen() {
         keyExtractor={(item) => item.productId}
         ListEmptyComponent={
           <View style={styles.emptyState}>
-            <ThemedText type="smallBold">Your cart is empty</ThemedText>
+            <ThemedText type="smallBold" style={{ fontSize: 18 }}>Your cart is empty</ThemedText>
             <ThemedText themeColor="textSecondary">
-              Add products from the shop to start your order.
+              Add products from the shop to get started
             </ThemedText>
           </View>
         }
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   content: {
     padding: Spacing.four,
     gap: Spacing.three,
+    flexGrow: 1,
   },
   header: {
     gap: Spacing.three,
@@ -178,8 +179,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emptyState: {
-    paddingVertical: Spacing.six,
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
     gap: Spacing.one,
+    minHeight: 300,
   },
 });
