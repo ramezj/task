@@ -1,6 +1,5 @@
 import { createFileRoute, redirect, Outlet } from '@tanstack/react-router'
 import { createServerFn } from '@tanstack/react-start'
-import { Login } from '../components/Login'
 import { getSupabaseServerClient } from '../utils/supabase'
 import { SidebarProvider, SidebarTrigger, SidebarInset } from '../components/ui/sidebar'
 import { AppSidebar } from '../components/AppSidebar'
