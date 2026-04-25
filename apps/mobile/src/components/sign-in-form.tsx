@@ -60,7 +60,7 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
             <Input
               autoCapitalize="none"
               autoComplete="email"
-              className="h-14 rounded-[18px] px-4"
+              className="rounded-[18px] px-4"
               invalid={!!errors.email}
               keyboardType="email-address"
               onBlur={onBlur}
@@ -73,7 +73,7 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           )}
         />
         {errors.email ? (
-          <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>
+          <ThemedText style={{ color: theme.destructive }}>{errors.email.message}</ThemedText>
         ) : null}
       </View>
 
@@ -97,7 +97,7 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           render={({ field: { onBlur, onChange, value } }) => (
             <Input
               ref={passwordInputRef}
-              className="h-14 rounded-[18px] px-4"
+              className="rounded-[18px] px-4"
               invalid={!!errors.password}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -110,16 +110,16 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           )}
         />
         {errors.password ? (
-          <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>
+          <ThemedText style={{ color: theme.destructive }}>{errors.password.message}</ThemedText>
         ) : null}
       </View>
 
       {loginMutation.error ? (
-        <ThemedText style={styles.errorText}>{loginMutation.error.message}</ThemedText>
+        <ThemedText style={{ color: theme.destructive }}>{loginMutation.error.message}</ThemedText>
       ) : null}
 
       <Button
-        className="h-14 rounded-[18px]"
+        className="rounded-[18px]"
         disabled={loginMutation.isPending}
         onPress={handleSubmit(onSubmit)}
         size="lg">
@@ -136,7 +136,7 @@ export function SignInForm({ onSignUpPress }: SignInFormProps) {
           Don't have an account?
         </ThemedText>
         <Pressable onPress={onSignUpPress}>
-          <ThemedText style={styles.linkText} type="smallBold">
+          <ThemedText style={{ color: theme.text }} type="smallBold">
             Sign up
           </ThemedText>
         </Pressable>

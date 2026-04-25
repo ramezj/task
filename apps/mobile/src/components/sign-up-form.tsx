@@ -79,7 +79,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           render={({ field: { onBlur, onChange, value } }) => (
             <Input
               autoCapitalize="words"
-              className="h-14 rounded-[18px] px-4"
+              className=" rounded-[18px] px-4"
               invalid={!!errors.name}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -90,7 +90,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
             />
           )}
         />
-        {errors.name ? <ThemedText style={styles.errorText}>{errors.name.message}</ThemedText> : null}
+        {errors.name ? <ThemedText style={{ color: theme.destructive }}>{errors.name.message}</ThemedText> : null}
       </View>
 
       <View style={styles.fieldGroup}>
@@ -110,7 +110,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
               ref={emailInputRef}
               autoCapitalize="none"
               autoComplete="email"
-              className="h-14 rounded-[18px] px-4"
+              className=" rounded-[18px] px-4"
               invalid={!!errors.email}
               keyboardType="email-address"
               onBlur={onBlur}
@@ -123,7 +123,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           )}
         />
         {errors.email ? (
-          <ThemedText style={styles.errorText}>{errors.email.message}</ThemedText>
+          <ThemedText style={{ color: theme.destructive }}>{errors.email.message}</ThemedText>
         ) : null}
       </View>
 
@@ -151,7 +151,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           render={({ field: { onBlur, onChange, value } }) => (
             <Input
               ref={passwordInputRef}
-              className="h-14 rounded-[18px] px-4"
+              className=" rounded-[18px] px-4"
               invalid={!!errors.password}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -164,18 +164,18 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           )}
         />
         {errors.password ? (
-          <ThemedText style={styles.errorText}>{errors.password.message}</ThemedText>
+          <ThemedText style={{ color: theme.destructive }}>{errors.password.message}</ThemedText>
         ) : null}
       </View>
 
-      {successMessage ? <ThemedText style={styles.successText}>{successMessage}</ThemedText> : null}
+      {successMessage ? <ThemedText style={{ color: theme.text }}>{successMessage}</ThemedText> : null}
 
       {registerMutation.error ? (
-        <ThemedText style={styles.errorText}>{registerMutation.error.message}</ThemedText>
+        <ThemedText style={{ color: theme.destructive }}>{registerMutation.error.message}</ThemedText>
       ) : null}
 
       <Button
-        className="h-14 rounded-[18px]"
+        className="rounded-[18px]"
         disabled={registerMutation.isPending}
         onPress={handleSubmit(onSubmit)}
         size="lg">
@@ -192,7 +192,7 @@ export function SignUpForm({ onLoginPress }: SignUpFormProps) {
           Already have an account?
         </ThemedText>
         <Pressable onPress={onLoginPress}>
-          <ThemedText style={styles.linkText} type="smallBold">
+          <ThemedText style={{ color: theme.text }} type="smallBold">
             Sign in
           </ThemedText>
         </Pressable>

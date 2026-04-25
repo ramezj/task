@@ -49,6 +49,12 @@ export default function AppTabsLayout() {
           },
           tabBarItemStyle: {
             paddingVertical: 4,
+            alignItems: "center",
+            justifyContent: "center",
+          },
+          tabBarLabelStyle: {
+            fontSize: 12,
+            textAlign: "center",
           },
         }}>
         <Tabs.Screen
