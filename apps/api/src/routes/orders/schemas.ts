@@ -25,6 +25,7 @@ export type PlaceOrderBody = z.infer<typeof PlaceOrderBodySchema>;
 export const OrdersPaginationQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
+  status: OrderStatusSchema.optional(),
 });
 
 export type OrdersPaginationQuery = z.infer<typeof OrdersPaginationQuerySchema>;

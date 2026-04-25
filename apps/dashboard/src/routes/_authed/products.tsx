@@ -265,9 +265,9 @@ function ProductsPage() {
         </DialogContent>
       </Dialog>
 
-      <div className="border rounded-xl">
-        <Table>
-          <TableHeader>
+      <div className="border rounded-md bg-card">
+        <Table className='rounded-md'>
+          <TableHeader className='rounded-md'>
             <TableRow>
               <TableHead className="w-[100px]">Active</TableHead>
               <TableHead>Name</TableHead>

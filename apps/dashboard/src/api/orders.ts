@@ -2,13 +2,15 @@ import { apiRequest } from "./client";
 import type { 
   ListOrdersSuccessData,
   OrderDetailSuccessData,
-  UpdateOrderStatusRequestData
+  UpdateOrderStatusRequestData,
+  ListOrdersRequestData
 } from "@task/types/order.js";
 
 export const ordersApi = {
-  list: async (accessToken: string) => {
+  list: async (accessToken: string, query?: ListOrdersRequestData & { status?: string }) => {
     const response = await apiRequest<ListOrdersSuccessData>("/api/orders", {
       accessToken,
+      query: query as Record<string, string | undefined>,
     });
     return response.data;
   },

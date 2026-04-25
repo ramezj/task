@@ -29,13 +29,19 @@ export async function listOrdersController(
     return sendError(reply, 400, "Validation Error", details || "Validation failed.");
   }
 
-  const { page, limit } = parsed.data;
+  const { page, limit, status } = parsed.data;
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
-  const { data, error, count } = await supabase
+  let query = supabase
     .from("orders")
-    .select(orderSelect, { count: "exact" })
+    .select(orderSelect, { count: "exact" });
+
+  if (status) {
+    query = query.eq("status", status);
+  }
+
+  const { data, error, count } = await query
     .order("created_at", { ascending: false })
     .range(from, to);
 
