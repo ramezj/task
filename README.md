@@ -2,6 +2,8 @@
 
 Welcome to the Mini Shop project. This is a monorepo containing the full-stack application, including the API, Admin Dashboard, and Mobile App.
 
+The Project Showcase Video is here -> https://drive.google.com/file/d/1vJAx1SAa3y2QRpvkGSrlD5LIf5B_sito/view?usp=sharing
+
 ## Project Structure
 
 - `apps/api`: Fastify-based backend API using Supabase.
