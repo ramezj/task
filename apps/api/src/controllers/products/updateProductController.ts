@@ -65,25 +65,37 @@ export async function updateProductController(
   if (parsedBody.data.categoryId !== undefined) updatePayload.category_id = parsedBody.data.categoryId;
   if (parsedBody.data.isActive !== undefined) updatePayload.is_active = parsedBody.data.isActive;
 
-  const { data: updatedRow, error: updateError } = await supabase
-    .from("products")
-    .update(updatePayload)
-    .eq("id", parsedParams.data.id)
-    .select("id")
-    .maybeSingle();
+  console.log("updatePayload:", updatePayload);
+  console.log("id:", parsedParams.data.id);
 
-  if (updateError) {
-    throw updateError;
-  }
+  let updatedRowId = parsedParams.data.id;
 
-  if (!updatedRow) {
-    return sendError(reply, 404, "Not Found", "Product not found");
+  if (Object.keys(updatePayload).length > 0) {
+    const { data: updatedRow, error: updateError } = await supabase
+      .from("products")
+      .update(updatePayload)
+      .eq("id", parsedParams.data.id)
+      .select("id")
+      .maybeSingle();
+
+    console.log("updatedRow:", updatedRow);
+    console.log("updateError:", updateError);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    if (!updatedRow) {
+      console.log("Returning 404 because updatedRow is null");
+      return sendError(reply, 404, "Not Found", "Product not found");
+    }
+    updatedRowId = updatedRow.id;
   }
 
   const { data: fullProduct, error: fetchError } = await supabase
     .from("products")
     .select(productSelect)
-    .eq("id", updatedRow.id)
+    .eq("id", updatedRowId)
     .single();
 
   if (fetchError) {
